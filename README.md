@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Homestead — Your Digital Sanctuary for Property Evaluation
+
+An AI-driven property evaluation platform built with Next.js, Tailwind CSS, Framer Motion, and Supabase.
+
+## Prerequisites
+
+- **Node.js** v18 or higher — [Download here](https://nodejs.org/)
+- **npm** (comes with Node.js)
 
 ## Getting Started
 
-First, run the development server:
+### 1. Install dependencies
+
+```bash
+cd app
+npm install
+```
+
+### 2. Set up environment variables
+
+Create a `.env.local` file in the `app` directory with your Supabase credentials:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+You can find these values in your [Supabase Dashboard](https://supabase.com/dashboard) under **Project Settings > API**.
+
+### 3. Run the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app will start at **http://localhost:3000**.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 4. Build for production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## Available Scripts
 
-To learn more about Next.js, take a look at the following resources:
+| Command         | Description                        |
+| --------------- | ---------------------------------- |
+| `npm run dev`   | Start development server           |
+| `npm run build` | Create optimized production build  |
+| `npm start`     | Serve the production build locally |
+| `npm run lint`  | Run ESLint                         |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Technology       | Purpose                          |
+| ---------------- | -------------------------------- |
+| Next.js 16       | React framework (App Router)     |
+| TypeScript       | Type safety                      |
+| Tailwind CSS 4   | Styling                          |
+| Framer Motion    | Animations & transitions         |
+| Lucide React     | Icon library                     |
+| Supabase         | Authentication & backend         |
 
-## Deploy on Vercel
+## Project Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+app/
+├── src/
+│   ├── app/                  # Next.js App Router pages
+│   │   ├── dashboard/        # Dashboard (protected, requires sign-in)
+│   │   ├── browse/           # AI Browse & Search
+│   │   ├── property/[id]/    # Property detail page
+│   │   ├── settings/         # Investment settings
+│   │   ├── shortlists/       # Saved shortlists
+│   │   ├── profile/          # User profile
+│   │   ├── signin/           # Sign in page
+│   │   ├── signup/           # Sign up page
+│   │   └── page.tsx          # Home page (public browse)
+│   ├── components/           # Reusable UI components
+│   │   ├── sidebar.tsx       # Navigation sidebar
+│   │   ├── top-app-bar.tsx   # Top application bar
+│   │   └── layout-shell.tsx  # Conditional layout wrapper
+│   ├── context/
+│   │   └── auth-context.tsx  # Authentication context & provider
+│   └── lib/
+│       └── supabase.ts       # Supabase client
+├── .env.local                # Environment variables (not committed)
+└── package.json
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Authentication Flow
+
+1. Visit `/` — browse properties without signing in
+2. Click **Get Started** to create an account at `/signup`
+3. Confirm your email via the link Supabase sends
+4. Sign in at `/signin` — redirects to `/dashboard`
+5. Dashboard displays your name and email
+6. Click **Logout** in the sidebar to sign out
