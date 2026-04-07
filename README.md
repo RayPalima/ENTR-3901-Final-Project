@@ -12,7 +12,6 @@ An AI-driven property evaluation platform built with Next.js, Tailwind CSS, Fram
 ### 1. Install dependencies
 
 ```bash
-cd app
 npm install
 ```
 
