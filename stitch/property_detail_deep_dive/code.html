@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Homestead - Property Detail Analysis</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#bfcd8f",
+                        "on-surface": "#1d1c0d",
+                        "on-secondary-container": "#606848",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#606c38",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#875f35",
+                        "secondary": "#5a6242",
+                        "inverse-surface": "#323120",
+                        "on-error-container": "#93000a",
+                        "outline": "#77786b",
+                        "secondary-fixed": "#dee7bf",
+                        "surface-container-highest": "#e7e3ca",
+                        "inverse-on-surface": "#f5f1d8",
+                        "on-tertiary-container": "#ffe1c8",
+                        "secondary-fixed-dim": "#c2cba4",
+                        "surface-variant": "#e7e3ca",
+                        "inverse-primary": "#bfcd8f",
+                        "on-surface-variant": "#46483c",
+                        "on-primary-container": "#dfedac",
+                        "surface-container": "#f2efd5",
+                        "on-tertiary-fixed": "#2c1600",
+                        "tertiary-fixed": "#ffdcbd",
+                        "surface": "#fefae0",
+                        "tertiary": "#6c471f",
+                        "surface-container-high": "#ede9cf",
+                        "primary-fixed": "#dbe9a9",
+                        "surface-tint": "#586330",
+                        "surface-dim": "#dedbc2",
+                        "outline-variant": "#c7c8b9",
+                        "background": "#fefae0",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#623f18",
+                        "on-primary-fixed-variant": "#404b1b",
+                        "error-container": "#ffdad6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#1d1c0d",
+                        "on-primary-fixed": "#171e00",
+                        "on-error": "#ffffff",
+                        "primary": "#485422",
+                        "secondary-container": "#dee7bf",
+                        "tertiary-fixed-dim": "#f0bd8b",
+                        "surface-container-low": "#f8f4db",
+                        "on-secondary-fixed-variant": "#424a2d",
+                        "surface-bright": "#fefae0",
+                        "on-secondary-fixed": "#171e06"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Be Vietnam Pro"],
+                        "label": ["Be Vietnam Pro"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        body { font-family: 'Be Vietnam Pro', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased">
+<!-- SideNavBar (Suppressed due to sub-page/details focus rule) -->
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 left-0 h-20 bg-[#fefae0]/70 backdrop-blur-xl flex justify-between items-center px-8 md:px-12 z-50">
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<span class="font-headline font-bold text-2xl tracking-tighter text-primary">Homestead</span>
+</div>
+<div class="flex items-center gap-6">
+<button class="hidden md:block bg-primary text-on-primary px-6 py-2.5 rounded-full font-headline font-semibold hover:opacity-90 transition-opacity">
+                Quick Add Property
+            </button>
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-highest">
+<img alt="User Profile" data-alt="Close-up portrait of a professional man in his 40s with a warm smile and modern eyeglasses against a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBn5ePnio4oqx2JxDr9zjw1W8B4YcQ5JKFvp3EHRpyx4xEt8MpGCntxocBuAbXa1M0ePbvFeeYt6orYbyH0L1pB4Nuetp3PVfL5L6YNZO7cS3dyFeincPFy6gn3UaDV-9Lm3j_E1WLklems5JSQbSXCHusn-_FBx7bOILsOh3e-bq7uVKrsDGc5tZLTZg4UxCZ7BfnJu2nXY6oUzScqgqJKHAB_2A3NRWvmTuB5GXBwSdyvbFVPQ-EE0SzBViMGEifN5WuxUMNpnmc"/>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-12 px-4 md:px-8 max-w-7xl mx-auto">
+<!-- Hero Gallery Section -->
+<section class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12 h-[500px]">
+<div class="md:col-span-2 relative overflow-hidden rounded-xl md:rounded-l-xl">
+<img class="w-full h-full object-cover" data-alt="Exquisite modern architectural home with large glass windows and clean white lines nestled in a lush green landscape at sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLXFKhPTS2SpyCf62PN9hbLE7SNngpYIrGvNjyxLT3KUzJIb6hF5ZPJm3ZlxT2SYzUZpJe5UyIA_Kn3H3YSVHGA6aryjTqBIbAXV_5cKHy5WZkFQ_MEarHj40H5j_DWUt78MVTIC8vCg03tb4D1lnSaFuooRcTrqkPTwcSHII2QztVMIHHeOuJ2CaJlW1W62nFSGNq7EzzgKQMiAB0Zhj-gAcIzGcKJOhdLlqgpdWvhlV6qhkgG1i2MKE9_Jh4zDEKPfglPNWeA7Y"/>
+<div class="absolute bottom-6 left-6 bg-surface/90 backdrop-blur-md px-4 py-2 rounded-full flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-primary" data-icon="photo_camera">photo_camera</span>
+<span class="font-headline font-bold text-primary">1/24 Photos</span>
+</div>
+</div>
+<div class="hidden md:flex flex-col gap-4">
+<div class="h-1/2 rounded-xl overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Warm contemporary kitchen with dark wood cabinets, marble island, and minimalist brass light fixtures overhead" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgUjrNcwZsfcCiXdVxq3AkTz2Nuz29eGONCYHJC5vp5QbnpLdKUoXaM9EOqtbEx3LRjnshtKeF_Gx2yfT-JpzxmtNvXSNud9nCGjQxzjGCbnV52qQKH2wUHtFQuKkjn1UgKsh--O4c26jWsZOJ7mkbYskdiaFFGj-OqrKZ8Xup57ounrq9X10MBm3g8JWc7cr_j5RhGVsJSbS7L0UPFUnpMdmWXhsrICe1oSpOLOYBiX47qQ5mwFSqflmOW1GryN7MCT2sB6R0vR4"/>
+</div>
+<div class="h-1/2 rounded-xl overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Sun-drenched living room with cream colored sofas, oak floors, and large potted plants creating an indoor oasis" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWe28o_wmEFcp8fyjslJiCaPrsn5Il3FSN3-pK7bf1Yw0tSYg5VlIF2D1fMiUd1nCeJ3VmUJukO3t8VaOI8qg_nIrCfVTMmpAgvECbBtBKps8wJyoHOqjh3E1Fs6ctpHpIHnEoNXB2McPCcIei0wtdBVD-xCOpPr9jHWMtM0yw4Cc4jACtiQtTH0i1NMpbZ1_BRlTknHYj-F84kPU6AEK011n7od5amet2BdjZ6lnThH_YUnq7JTiv7dfO3D6H_kJla4t5ER0ATP0"/>
+</div>
+</div>
+<div class="hidden md:block relative h-full rounded-r-xl overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Spacious master bedroom with floor-to-ceiling windows overlooking a misty pine forest in the early morning light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyHX0xQeSjC6Z0gpTGbT93oi8nGWjx6kftji-HabUSp4SvVqK5fcIMondhcddqMGZqUULHKYpc1EOtN_cxqIzpudzJcxDZCuXPprimvsAJMTYEbxxyiv5ByhXbnSYiaqrTRJP2FFS-kNDw8d-dawK7F3ynF2IYgOX8swkvtkFYWWc2XabZiaDYUUzISk2Aw1xeS_HAMNZ8jLqGnPaFIEduLAQS_gKzS85AhVk9lL6lY-GdLwomcqxubky7E-N_ZobI9KZP5EkQQj0"/>
+<div class="absolute inset-0 bg-black/20 flex items-center justify-center cursor-pointer hover:bg-black/40 transition-colors">
+<span class="text-white font-headline font-bold text-lg">+20 More</span>
+</div>
+</div>
+</section>
+<!-- Main Content Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Left Column: Narratives & Details -->
+<div class="lg:col-span-2 space-y-8">
+<!-- Property Title & Baseline -->
+<div class="bg-surface-container-low p-8 rounded-xl">
+<div class="flex flex-wrap justify-between items-start gap-4 mb-6">
+<div>
+<h1 class="text-4xl font-headline font-extrabold text-on-surface tracking-tight mb-2">Juniper Ridge Estate</h1>
+<p class="text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="location_on">location_on</span>
+                                442 Silverleaf Trail, Boulder, CO 80302
+                            </p>
+</div>
+<div class="text-right">
+<p class="text-3xl font-headline font-extrabold text-primary">$2,450,000</p>
+<p class="text-on-tertiary-fixed-variant font-medium">Estimated Cap Rate: 5.2%</p>
+</div>
+</div>
+<div class="flex flex-wrap gap-8 py-6 border-t border-outline-variant/30">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="bed">bed</span>
+</div>
+<div>
+<p class="text-xs text-on-surface-variant uppercase tracking-wider">Bedrooms</p>
+<p class="font-bold">5 Beds</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="bathtub">bathtub</span>
+</div>
+<div>
+<p class="text-xs text-on-surface-variant uppercase tracking-wider">Bathrooms</p>
+<p class="font-bold">4.5 Baths</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="square_foot">square_foot</span>
+</div>
+<div>
+<p class="text-xs text-on-surface-variant uppercase tracking-wider">Square Feet</p>
+<p class="font-bold">4,250 sqft</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="landscape">landscape</span>
+</div>
+<div>
+<p class="text-xs text-on-surface-variant uppercase tracking-wider">Lot Size</p>
+<p class="font-bold">1.2 Acres</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Recommendation Writer Hearth Section -->
+<div class="bg-tertiary-container p-12 rounded-xl relative overflow-hidden">
+<div class="absolute top-0 right-0 w-64 h-64 bg-on-tertiary-container/10 rounded-full -mr-20 -mt-20 blur-3xl"></div>
+<div class="relative z-10">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-on-tertiary-fixed" data-icon="auto_awesome">auto_awesome</span>
+<h2 class="text-2xl font-headline font-extrabold text-on-tertiary-fixed">Recommendation Writer</h2>
+</div>
+<p class="text-xl font-body leading-relaxed text-on-tertiary-fixed mb-8">
+                            "Juniper Ridge represents a rare convergence of architectural integrity and strategic positioning. Our AI identifies this property as a 'Strong Buy' for long-term equity growth. The seamless integration with its natural Boulder surroundings isn't just aesthetic; it's a value-preserving moat in a tightening market. Expect high demand for rentals among executive-level tenants seeking a retreat that functions as a high-tech hub."
+                        </p>
+<div class="flex gap-4">
+<span class="px-4 py-2 bg-on-tertiary-fixed text-tertiary-fixed rounded-full text-sm font-bold">Top 2% Equity Forecast</span>
+<span class="px-4 py-2 bg-on-tertiary-fixed text-tertiary-fixed rounded-full text-sm font-bold">Resilient Micro-market</span>
+</div>
+</div>
+</div>
+<!-- Map & Local View -->
+<div class="bg-surface-container-low p-8 rounded-xl">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-2xl font-headline font-bold text-on-surface">Commute Evaluator</h2>
+<span class="text-sm text-on-surface-variant">Boulder North Sector</span>
+</div>
+<div class="w-full h-[400px] bg-surface-container-highest rounded-xl overflow-hidden mb-6">
+<img class="w-full h-full object-cover opacity-80" data-alt="Detailed topographical street map of Boulder Colorado showing parks, trails, and residential layouts in muted earth tones" data-location="Boulder, Colorado" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNhDwl5WbmK3sY-l1AygDey7PUi9xTt7Sku-XKBpvPJkLjxteN76VKOqIJ3xkqyBzxPFxNtq8MbQmO_e8wyyJo3i_55X04_sOpKwnO5-cDsMulJlg73QNciZjsTtu65JLZ-nIiD2d177I9NSwtVgm2dfJp8nu1qacX0gpl89aqOirv9DoQULr9nadnRNvnMN97NdM49unemt_oqDOFpyVQERa8wawfRAt2K_v6WU3EN5utW7hlqcy06mBSzi4qR0mVWiYPPtBBeBg"/>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2 text-primary font-bold">
+<span class="material-symbols-outlined" data-icon="coffee">coffee</span>
+<span>Amenities</span>
+</div>
+<p class="text-sm text-on-surface-variant">6 Coffee shops within 0.8 miles</p>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2 text-primary font-bold">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+<span>Schools</span>
+</div>
+<p class="text-sm text-on-surface-variant">Silver Lake Elementary (9/10)</p>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2 text-primary font-bold">
+<span class="material-symbols-outlined" data-icon="directions_car">directions_car</span>
+<span>Downtown</span>
+</div>
+<p class="text-sm text-on-surface-variant">12 min average drive time</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Financial Analysis -->
+<div class="space-y-8">
+<!-- Financial Analyst Card -->
+<div class="bg-surface-container-highest p-8 rounded-xl">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-primary" data-icon="monitoring">monitoring</span>
+<h2 class="text-xl font-headline font-bold text-on-surface">Financial Analyst</h2>
+</div>
+<div class="space-y-6">
+<div>
+<div class="flex justify-between text-sm mb-2">
+<span class="text-on-surface-variant">Annual Cash Flow</span>
+<span class="font-bold text-primary">+$12,400</span>
+</div>
+<div class="h-2 bg-surface-container w-full rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 75%"></div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface p-4 rounded-xl">
+<p class="text-xs text-on-surface-variant mb-1">Gross Yield</p>
+<p class="text-lg font-bold">7.2%</p>
+</div>
+<div class="bg-surface p-4 rounded-xl">
+<p class="text-xs text-on-surface-variant mb-1">Mortgage Est.</p>
+<p class="text-lg font-bold">$8,250</p>
+</div>
+</div>
+<div class="pt-6 border-t border-outline-variant">
+<h3 class="text-sm font-bold text-on-surface mb-4">Investment Projections</h3>
+<div class="flex items-end gap-2 h-40 pt-4">
+<div class="flex-1 bg-primary/20 h-1/4 rounded-t-md relative group">
+<div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">Y1</div>
+</div>
+<div class="flex-1 bg-primary/40 h-2/4 rounded-t-md"></div>
+<div class="flex-1 bg-primary/60 h-3/4 rounded-t-md"></div>
+<div class="flex-1 bg-primary h-full rounded-t-md"></div>
+</div>
+<div class="flex justify-between text-[10px] mt-2 text-on-surface-variant font-bold">
+<span>2024</span>
+<span>2025</span>
+<span>2026</span>
+<span>2027</span>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-4 rounded-full font-headline font-bold text-lg hover:bg-primary-container transition-colors mt-4">
+                            Unlock Full Report
+                        </button>
+<p class="text-center text-xs text-on-surface-variant px-4">
+                            Comprehensive 42-page tax and structural analysis available with Premium.
+                        </p>
+</div>
+</div>
+<!-- Bento Quick Stats -->
+<div class="grid grid-cols-1 gap-4">
+<div class="bg-primary-fixed p-6 rounded-xl">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-primary" data-icon="trending_up">trending_up</span>
+<span class="text-sm font-bold text-on-primary-fixed-variant">Appreciation Score</span>
+</div>
+<p class="text-3xl font-headline font-black text-primary">A+</p>
+<p class="text-xs text-on-primary-fixed-variant mt-2">Predicted +14% value increase by 2026</p>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl flex items-center justify-between">
+<div>
+<p class="text-xs text-on-surface-variant font-bold">Days on Market</p>
+<p class="text-2xl font-bold">12 Days</p>
+</div>
+<div class="w-12 h-12 rounded-full border-2 border-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="schedule">schedule</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Nav for Mobile -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container-low px-6 py-4 flex justify-between items-center z-50">
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="text-[10px] font-bold">Explore</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+<span class="text-[10px] font-bold">Saved</span>
+</button>
+<div class="w-14 h-14 bg-primary rounded-full -mt-10 flex items-center justify-center text-on-primary shadow-lg">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</div>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+<span class="text-[10px] font-bold">Analysis</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+<span class="text-[10px] font-bold">Profile</span>
+</button>
+</nav>
+</body></html>

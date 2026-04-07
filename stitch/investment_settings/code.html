@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Investment Settings | Homestead</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#bfcd8f",
+                        "on-surface": "#1d1c0d",
+                        "on-secondary-container": "#606848",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#606c38",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#875f35",
+                        "secondary": "#5a6242",
+                        "inverse-surface": "#323120",
+                        "on-error-container": "#93000a",
+                        "outline": "#77786b",
+                        "secondary-fixed": "#dee7bf",
+                        "surface-container-highest": "#e7e3ca",
+                        "inverse-on-surface": "#f5f1d8",
+                        "on-tertiary-container": "#ffe1c8",
+                        "secondary-fixed-dim": "#c2cba4",
+                        "surface-variant": "#e7e3ca",
+                        "inverse-primary": "#bfcd8f",
+                        "on-surface-variant": "#46483c",
+                        "on-primary-container": "#dfedac",
+                        "surface-container": "#f2efd5",
+                        "on-tertiary-fixed": "#2c1600",
+                        "tertiary-fixed": "#ffdcbd",
+                        "surface": "#fefae0",
+                        "tertiary": "#6c471f",
+                        "surface-container-high": "#ede9cf",
+                        "primary-fixed": "#dbe9a9",
+                        "surface-tint": "#586330",
+                        "surface-dim": "#dedbc2",
+                        "outline-variant": "#c7c8b9",
+                        "background": "#fefae0",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#623f18",
+                        "on-primary-fixed-variant": "#404b1b",
+                        "error-container": "#ffdad6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#1d1c0d",
+                        "on-primary-fixed": "#171e00",
+                        "on-error": "#ffffff",
+                        "primary": "#485422",
+                        "secondary-container": "#dee7bf",
+                        "tertiary-fixed-dim": "#f0bd8b",
+                        "surface-container-low": "#f8f4db",
+                        "on-secondary-fixed-variant": "#424a2d",
+                        "surface-bright": "#fefae0",
+                        "on-secondary-fixed": "#171e06"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Be Vietnam Pro"],
+                        "label": ["Be Vietnam Pro"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; }
+        h1, h2, h3 { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        input[type="range"] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        input[type="range"]::-webkit-slider-runnable-track {
+            background: #e7e3ca;
+            height: 8px;
+            border-radius: 4px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            background: #485422;
+            border-radius: 50%;
+            margin-top: -8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-screen w-64 bg-[#485422] dark:bg-[#1d1c0d] flex flex-col h-full py-8 z-50">
+<div class="px-8 mb-12">
+<h1 class="text-2xl font-bold tracking-tighter text-[#fefae0]">Homestead</h1>
+<p class="text-xs text-[#fefae0]/60 uppercase tracking-widest mt-1">SaaS Dashboard</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center text-[#fefae0]/70 hover:text-[#fefae0] px-4 py-3 mx-2 my-1 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium text-sm tracking-tight">Dashboard</span>
+</a>
+<a class="flex items-center text-[#fefae0]/70 hover:text-[#fefae0] px-4 py-3 mx-2 my-1 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">search</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium text-sm tracking-tight">New Search</span>
+</a>
+<a class="flex items-center text-[#fefae0]/70 hover:text-[#fefae0] px-4 py-3 mx-2 my-1 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">bookmark</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium text-sm tracking-tight">Saved Shortlists</span>
+</a>
+<a class="flex items-center bg-[#606c38] text-[#fefae0] rounded-full mx-2 my-1 px-4 py-3 font-semibold transition-all" href="#">
+<span class="material-symbols-outlined mr-3" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium text-sm tracking-tight">Investment Settings</span>
+</a>
+<a class="flex items-center text-[#fefae0]/70 hover:text-[#fefae0] px-4 py-3 mx-2 my-1 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">person</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium text-sm tracking-tight">Profile</span>
+</a>
+</nav>
+<div class="px-6 pt-8 mt-auto border-t border-[#fefae0]/10">
+<div class="flex items-center gap-3">
+<img alt="User Profile" class="w-10 h-10 rounded-full" data-alt="professional headshot of a smiling investment manager in a neutral studio setting with soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWBVq1GDa04KLYtp66kPKdCLLfFdO0Srm3ee3NMeHsy9Q8u7QXncWz9WvPhJt1loWA7XkBYEoTO7Ufbw0c1Bos3_-0LWt-sTUo1grt-fYKLeOfGkY58HMDrAh0Yst2jqQFW7ZneApJ93joHI4HrYQKBooQ9AIZMV2YPWItrEl4OjO5n7XeRRysTXDKYRK_3ZkFsMXR6_34tFz64UYIJbJ6yk3A0jJNDIechek3zYV1gHqfumrdUdZPwTtoKc2ZLhvQgcwNY71PrkM"/>
+<div>
+<p class="text-sm font-semibold text-[#fefae0]">Alex Chen</p>
+<p class="text-xs text-[#fefae0]/50">Premium Member</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-20 bg-[#fefae0]/70 dark:bg-[#1d1c0d]/70 backdrop-blur-xl flex justify-end items-center px-12 gap-6 z-40">
+<button class="flex items-center gap-2 px-6 py-2.5 bg-primary rounded-full text-on-primary font-['Plus_Jakarta_Sans'] font-semibold text-sm hover:opacity-90 transition-opacity active:scale-95">
+<span class="material-symbols-outlined text-sm">add</span>
+            Quick Add Property
+        </button>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#e7e3ca] transition-colors">
+<span class="material-symbols-outlined text-[#485422]">notifications</span>
+</button>
+<div class="h-8 w-px bg-outline-variant/30"></div>
+<img alt="User Profile" class="w-10 h-10 rounded-full ring-2 ring-primary/10" data-alt="professional headshot of a smiling investment manager in a neutral studio setting with soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBn80PT4YMW4SrOh5tztO3z6xiLfJ3WAQTYPKRZS54XUnYy3Mr9rLYgRXCL3pXvc4IZlnBC1ubqWwZj7ZIW0u44eHwO6UJEmW0-1ImfrDMo5hO_E5HcEhHG05lLo-gT-JZ95GDPRWTqhCyA2ci4NxuVZm_eqZLwwLe5ykfM25VjX92TAcZNz8xaFyyc3uVpbGLrdR9EmOyjqcnfJpw9_3Xv6utK7z-K9Gf57Q422f7a_dwT1_f-2ZH3OKaJVKZIqc3QDvNFOUCAQIQ"/>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="ml-64 pt-20 min-h-screen bg-surface-container-low p-12">
+<div class="max-w-5xl mx-auto">
+<!-- Hearth Container Header -->
+<section class="bg-tertiary-container text-on-tertiary-container rounded-xl p-12 mb-12 flex items-center justify-between overflow-hidden relative">
+<div class="relative z-10">
+<h2 class="text-4xl font-extrabold tracking-tight mb-2">Define Your North Star.</h2>
+<p class="text-lg opacity-80 max-w-md">Your investment settings guide our matching engine to find properties that align with your lifestyle and financial horizon.</p>
+</div>
+<div class="absolute right-0 top-0 h-full w-1/3 opacity-20 pointer-events-none">
+<img alt="Abstract texture" class="h-full w-full object-cover" data-alt="Soft hazy sunlight filtering through lush green forest canopy creating organic patterns of light and shadow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCL3lhvSzogd2YeRlRntDtfucnCt2YJnJpX3mJkOc4n8cysoSzajL0OcBfCFwoInGiZ1Vp_DiCdnMDg-E3MqKuF0s5DAVJgd_CkpvBMnDPOl8Hbv9gjHY__Qru-QH_eWtwn7cm56GUGhRB-1cG1IGtevD31-gkSnzBtHGIIr92-VjSrGqcCkhrB987ArWsyekXXTAJWzf6l9GInVflTMzNkw4UnzLWRl8teB1ASwVUx82wGHBmZCbBGEekKZEDvF3s0uhNjO9lgTEY"/>
+</div>
+</section>
+<!-- Settings Content Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Financial Goals Section -->
+<div class="lg:col-span-7 space-y-8">
+<div class="bg-surface rounded-lg p-8 shadow-sm">
+<div class="flex items-center gap-3 mb-8">
+<div class="w-12 h-12 bg-primary-fixed rounded-full flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<h3 class="text-2xl font-bold">Financial Goals</h3>
+</div>
+<div class="space-y-10">
+<!-- ROI Slider -->
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<label class="text-sm font-semibold text-on-surface-variant uppercase tracking-wider">Target Annual ROI</label>
+<span class="text-2xl font-bold text-primary">8.5%</span>
+</div>
+<input class="w-full" max="25" min="2" step="0.5" type="range" value="8.5"/>
+<div class="flex justify-between text-xs text-outline font-medium">
+<span>2% (Conservative)</span>
+<span>25% (Aggressive)</span>
+</div>
+</div>
+<!-- Budget Field -->
+<div class="grid grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-sm font-semibold text-on-surface-variant uppercase tracking-wider">Maximum Budget</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-outline">$</span>
+<input class="w-full pl-8 pr-4 py-3 bg-surface-container-highest border-none rounded-md focus:ring-2 focus:ring-primary/30 font-semibold text-on-surface" type="text" value="1,250,000"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-semibold text-on-surface-variant uppercase tracking-wider">Min Down Payment</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-outline">%</span>
+<input class="w-full pl-8 pr-4 py-3 bg-surface-container-highest border-none rounded-md focus:ring-2 focus:ring-primary/30 font-semibold text-on-surface" type="text" value="20"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Property Types Selection -->
+<div class="bg-surface rounded-lg p-8 shadow-sm">
+<div class="flex items-center gap-3 mb-8">
+<div class="w-12 h-12 bg-secondary-fixed rounded-full flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">home_work</span>
+</div>
+<h3 class="text-2xl font-bold">Property Types</h3>
+</div>
+<div class="grid grid-cols-3 gap-4">
+<button class="flex flex-col items-center gap-3 p-6 rounded-lg bg-primary-container text-on-primary-container border-2 border-primary transition-all">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-bold text-sm">Single Family</span>
+</button>
+<button class="flex flex-col items-center gap-3 p-6 rounded-lg bg-surface-container-highest text-on-surface-variant hover:bg-surface-dim transition-all">
+<span class="material-symbols-outlined text-3xl">apartment</span>
+<span class="font-bold text-sm">Multi-Family</span>
+</button>
+<button class="flex flex-col items-center gap-3 p-6 rounded-lg bg-surface-container-highest text-on-surface-variant hover:bg-surface-dim transition-all">
+<span class="material-symbols-outlined text-3xl">holiday_village</span>
+<span class="font-bold text-sm">Commercial</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Right Column: Location & Summary -->
+<div class="lg:col-span-5 space-y-8">
+<!-- Location Preferences -->
+<div class="bg-surface rounded-lg p-8 shadow-sm">
+<div class="flex items-center gap-3 mb-8">
+<div class="w-12 h-12 bg-tertiary-fixed rounded-full flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">distance</span>
+</div>
+<h3 class="text-2xl font-bold">Commute Focus</h3>
+</div>
+<div class="space-y-6">
+<div class="p-4 bg-surface-container-low rounded-lg space-y-4">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">work</span>
+<span class="font-semibold">Work HQ</span>
+</div>
+<span class="text-sm font-bold text-primary">Max 30 min</span>
+</div>
+<input class="w-full" max="90" min="5" type="range" value="30"/>
+</div>
+<div class="p-4 bg-surface-container-low rounded-lg space-y-4">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">nightlife</span>
+<span class="font-semibold">Downtown Hub</span>
+</div>
+<span class="text-sm font-bold text-primary">Max 15 min</span>
+</div>
+<input class="w-full" max="60" min="5" type="range" value="15"/>
+</div>
+</div>
+<div class="mt-8 pt-8 border-t border-outline-variant/30">
+<div class="flex items-center justify-between mb-4">
+<span class="font-semibold">Proximity to Parks</span>
+<div class="w-12 h-6 bg-primary rounded-full relative cursor-pointer">
+<div class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></div>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-semibold">High-Rated Schools</span>
+<div class="w-12 h-6 bg-surface-container-highest rounded-full relative cursor-pointer">
+<div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full shadow-sm"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Personalized Insight Card -->
+<div class="bg-surface-container-highest rounded-lg p-8 border-l-4 border-primary">
+<span class="material-symbols-outlined text-primary mb-4 text-3xl">lightbulb</span>
+<h4 class="text-xl font-bold mb-2">Strategy Match</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6">
+                            Based on your 8.5% ROI target and urban commute preference, we suggest looking at <span class="font-bold text-primary">Transit-Oriented Development (TOD)</span> areas in the northern suburbs.
+                        </p>
+<button class="w-full py-4 bg-primary text-on-primary rounded-full font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform active:scale-95">
+                            Save &amp; Sync Profile
+                        </button>
+</div>
+</div>
+</div>
+<!-- Footer Spacing -->
+<div class="h-20"></div>
+</div>
+</main>
+</body></html>

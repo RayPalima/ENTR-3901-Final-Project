@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Homestead | Account &amp; Profile Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-primary": "#bfcd8f",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-container": "#ffe1c8",
+                        "on-error": "#ffffff",
+                        "on-surface-variant": "#46483c",
+                        "secondary-fixed-dim": "#c2cba4",
+                        "secondary-fixed": "#dee7bf",
+                        "error-container": "#ffdad6",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "tertiary": "#6c471f",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#dfedac",
+                        "primary-fixed-dim": "#bfcd8f",
+                        "on-primary-fixed-variant": "#404b1b",
+                        "primary-container": "#606c38",
+                        "surface-tint": "#586330",
+                        "primary": "#485422",
+                        "on-background": "#1d1c0d",
+                        "surface-container-high": "#ede9cf",
+                        "inverse-on-surface": "#f5f1d8",
+                        "tertiary-container": "#875f35",
+                        "on-surface": "#1d1c0d",
+                        "outline": "#77786b",
+                        "on-secondary-container": "#606848",
+                        "tertiary-fixed": "#ffdcbd",
+                        "on-primary-fixed": "#171e00",
+                        "background": "#fefae0",
+                        "surface-variant": "#e7e3ca",
+                        "on-secondary-fixed": "#171e06",
+                        "surface-container": "#f2efd5",
+                        "surface-bright": "#fefae0",
+                        "primary-fixed": "#dbe9a9",
+                        "surface": "#fefae0",
+                        "surface-dim": "#dedbc2",
+                        "outline-variant": "#c7c8b9",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#424a2d",
+                        "on-secondary": "#ffffff",
+                        "surface-container-highest": "#e7e3ca",
+                        "secondary": "#5a6242",
+                        "on-tertiary-fixed-variant": "#623f18",
+                        "surface-container-low": "#f8f4db",
+                        "inverse-surface": "#323120",
+                        "tertiary-fixed-dim": "#f0bd8b",
+                        "secondary-container": "#dee7bf",
+                        "on-tertiary-fixed": "#2c1600"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Be Vietnam Pro"],
+                        "label": ["Be Vietnam Pro"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Be Vietnam Pro', sans-serif; }
+        h1, h2, h3 { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-surface antialiased">
+<!-- SideNavBar Component -->
+<nav class="h-screen w-72 fixed left-0 top-0 bg-[#f8f4db] dark:bg-stone-950 flex flex-col py-8 border-r-0 z-40">
+<div class="px-8 mb-10">
+<h1 class="text-xl font-extrabold text-[#485422] tracking-tight">Homestead</h1>
+<p class="text-[10px] uppercase tracking-widest text-[#606c38] font-bold opacity-70">Digital Sanctuary</p>
+</div>
+<div class="flex-1 space-y-1">
+<a class="text-[#606c38] dark:text-[#c7c8b9] mx-4 py-3 px-6 flex items-center gap-4 hover:bg-[#e7e3ca] dark:hover:bg-stone-800 rounded-full transition-all group" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="grid_view">grid_view</span>
+<span class="font-medium text-sm">Dashboard</span>
+</a>
+<a class="text-[#606c38] dark:text-[#c7c8b9] mx-4 py-3 px-6 flex items-center gap-4 hover:bg-[#e7e3ca] dark:hover:bg-stone-800 rounded-full transition-all group" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="home_work">home_work</span>
+<span class="font-medium text-sm">Properties</span>
+</a>
+<a class="text-[#606c38] dark:text-[#c7c8b9] mx-4 py-3 px-6 flex items-center gap-4 hover:bg-[#e7e3ca] dark:hover:bg-stone-800 rounded-full transition-all group" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="payments">payments</span>
+<span class="font-medium text-sm">Financials</span>
+</a>
+<a class="text-[#606c38] dark:text-[#c7c8b9] mx-4 py-3 px-6 flex items-center gap-4 hover:bg-[#e7e3ca] dark:hover:bg-stone-800 rounded-full transition-all group" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="insights">insights</span>
+<span class="font-medium text-sm">Analytics</span>
+</a>
+<a class="bg-[#485422] text-[#fefae0] rounded-full mx-4 py-3 px-6 flex items-center gap-4 shadow-lg shadow-[#485422]/20" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="settings">settings</span>
+<span class="font-medium text-sm">Settings</span>
+</a>
+</div>
+<div class="px-8 mt-auto pt-8 border-t border-outline-variant/10">
+<div class="bg-tertiary-container/10 p-6 rounded-lg mb-8">
+<p class="text-xs font-bold text-tertiary-fixed-dim uppercase tracking-tighter mb-2">Current Plan</p>
+<p class="text-primary font-bold text-sm mb-4">Standard Hearth</p>
+<button class="w-full py-2.5 px-4 bg-primary text-on-primary rounded-full text-xs font-bold transition-transform active:scale-95">Upgrade Plan</button>
+</div>
+<div class="space-y-1">
+<a class="text-[#606c38] dark:text-[#c7c8b9] py-2 px-4 flex items-center gap-3 hover:bg-[#e7e3ca] rounded-full transition-all text-sm" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="contact_support">contact_support</span>
+                    Support
+                </a>
+<a class="text-error py-2 px-4 flex items-center gap-3 hover:bg-error-container/50 rounded-full transition-all text-sm" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="logout">logout</span>
+                    Logout
+                </a>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="ml-72 min-h-screen pb-20">
+<!-- Header -->
+<header class="h-24 flex items-center justify-between px-12 bg-surface/50 backdrop-blur-md sticky top-0 z-30">
+<div>
+<h2 class="text-3xl font-extrabold text-primary tracking-tight">Account &amp; Profile Settings</h2>
+<p class="text-on-surface-variant text-sm font-medium">Manage your personal details and digital sanctuary preferences.</p>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-3 text-primary bg-surface-container-low rounded-full hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="flex items-center gap-3 bg-surface-container-high pl-2 pr-4 py-1.5 rounded-full">
+<img alt="User profile avatar" class="w-8 h-8 rounded-full object-cover" data-alt="Close-up portrait of a professional man with a friendly expression in soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTalFqKo5yvG71a9kCRffkJA7eAr5E4vIrtL3omBE4a-OPGwlVhIsSl5jMdb2BkLRoopw_sCwIIDGcc4-ehHLsjhk92ZbSREULp1vTv8PC67GB3_ehqIRF4RomHINSqzla9967F80Y5IRlZrlC3t3jIYqEMx1qWB7uPb_4-4RkO5TC4eyhtt7tYj26SzWNyYmmj_OBotgw6Q6CGIbV_GtI7avnDRvcLa2Uina4JTJ6gmL5nRedLmpv9KniHrG4PNj0AK4ze9AVUSk"/>
+<span class="text-sm font-bold text-primary">Julian Thorne</span>
+</div>
+</div>
+</header>
+<div class="px-12 mt-12 grid grid-cols-12 gap-8 max-w-7xl">
+<!-- Profile Section (The Hearth Container Style) -->
+<section class="col-span-12 lg:col-span-4 flex flex-col items-center p-10 bg-tertiary-container rounded-xl text-center">
+<div class="relative mb-6">
+<div class="w-48 h-48 rounded-xl overflow-hidden shadow-2xl ring-8 ring-white/10">
+<img alt="Profile photo" class="w-full h-full object-cover" data-alt="Professional man with short dark hair smiling warmly, outdoors with blurred greenery in the background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAP3G7g6t-LEAOACM8AUbEY97w3ke1lgUnFXJ2KtOLYBhzoKciSQvgT4gX23lBhNm-t67l48scQUWyzOZ9JcEfmaYNnhygRSrLyREKq4qI95jxIW40zy9jP_arl6ekS8L_gyCwx8axGVaC5oZCLx5zfFaQL-V6Ap4VCRqUYtayGgToz8G1f3mPzt_XGdahnTVdJt5O6wExk9Uy9eY_rEQ9jWe5o1kVNwtbmr2VWotDl4a6gVuyb6JaJcEsBcNz-32F66jfpOk7I29Y"/>
+</div>
+<button class="absolute -bottom-4 right-4 bg-primary text-on-primary p-3 rounded-full shadow-lg hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+</button>
+</div>
+<h3 class="text-2xl font-bold text-on-tertiary-container mb-1">Julian Thorne</h3>
+<p class="text-tertiary-fixed font-medium opacity-90 mb-8">Premium Homeowner</p>
+<div class="w-full grid grid-cols-2 gap-4">
+<div class="bg-white/10 backdrop-blur-md p-4 rounded-lg">
+<p class="text-[10px] uppercase tracking-widest text-tertiary-fixed font-bold mb-1">Properties</p>
+<p class="text-2xl font-bold text-white">12</p>
+</div>
+<div class="bg-white/10 backdrop-blur-md p-4 rounded-lg">
+<p class="text-[10px] uppercase tracking-widest text-tertiary-fixed font-bold mb-1">Tenants</p>
+<p class="text-2xl font-bold text-white">34</p>
+</div>
+</div>
+<button class="mt-8 w-full py-4 px-6 bg-[#fefae0] text-primary font-bold rounded-xl shadow-sm hover:shadow-md transition-all active:translate-y-1">
+                    Edit Photo
+                </button>
+</section>
+<!-- Form Sections -->
+<div class="col-span-12 lg:col-span-8 space-y-8">
+<!-- Personal Information -->
+<section class="bg-surface-container-low p-8 rounded-lg shadow-[0_20px_50px_rgba(29,28,13,0.04)]">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-primary p-2 bg-primary-fixed rounded-full" data-icon="person_outline">person_outline</span>
+<h4 class="text-xl font-bold text-primary tracking-tight">Personal Information</h4>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider ml-1">Full Name</label>
+<input class="w-full bg-surface-container-highest border-none rounded-md py-4 px-6 focus:ring-2 focus:ring-primary/20 text-on-surface font-medium transition-all" type="text" value="Julian Thorne"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider ml-1">Email Address</label>
+<input class="w-full bg-surface-container-highest border-none rounded-md py-4 px-6 focus:ring-2 focus:ring-primary/20 text-on-surface font-medium transition-all" type="email" value="julian.thorne@homestead.io"/>
+</div>
+<div class="space-y-2 md:col-span-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider ml-1">Phone Number</label>
+<input class="w-full bg-surface-container-highest border-none rounded-md py-4 px-6 focus:ring-2 focus:ring-primary/20 text-on-surface font-medium transition-all" type="tel" value="+1 (555) 012-3456"/>
+</div>
+</div>
+</section>
+<!-- Account Security -->
+<section class="bg-surface-container-low p-8 rounded-lg shadow-[0_20px_50px_rgba(29,28,13,0.04)]">
+<div class="flex items-center justify-between mb-8">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary p-2 bg-primary-fixed rounded-full" data-icon="security">security</span>
+<h4 class="text-xl font-bold text-primary tracking-tight">Account Security</h4>
+</div>
+<button class="text-sm font-bold text-primary px-4 py-2 hover:bg-primary-fixed rounded-full transition-all">Update Password</button>
+</div>
+<div class="flex items-center justify-between p-6 bg-surface-container rounded-lg group">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-primary_container" data-icon="key">key</span>
+<div>
+<p class="text-sm font-bold text-on-surface">Two-Factor Authentication</p>
+<p class="text-xs text-on-surface-variant font-medium">Add an extra layer of security to your sanctuary.</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-14 h-8 bg-surface-dim peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</section>
+<!-- Notification Preferences -->
+<section class="bg-surface-container-low p-8 rounded-lg shadow-[0_20px_50px_rgba(29,28,13,0.04)]">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-primary p-2 bg-primary-fixed rounded-full" data-icon="notifications_active">notifications_active</span>
+<h4 class="text-xl font-bold text-primary tracking-tight">Notification Preferences</h4>
+</div>
+<div class="space-y-6">
+<div class="flex items-start justify-between p-2 hover:bg-surface-container-high/50 rounded-lg transition-all group">
+<div class="flex-1">
+<p class="text-sm font-bold text-on-surface">Email Notifications</p>
+<p class="text-xs text-on-surface-variant font-medium">Weekly property summaries and monthly market insights.</p>
+</div>
+<input checked="" class="w-6 h-6 rounded-md text-primary bg-surface-container-highest border-none focus:ring-primary focus:ring-offset-0" type="checkbox"/>
+</div>
+<div class="flex items-start justify-between p-2 hover:bg-surface-container-high/50 rounded-lg transition-all group">
+<div class="flex-1">
+<p class="text-sm font-bold text-on-surface">SMS Alerts</p>
+<p class="text-xs text-on-surface-variant font-medium">Real-time alerts for urgent tenant maintenance requests.</p>
+</div>
+<input class="w-6 h-6 rounded-md text-primary bg-surface-container-highest border-none focus:ring-primary focus:ring-offset-0" type="checkbox"/>
+</div>
+<div class="flex items-start justify-between p-2 hover:bg-surface-container-high/50 rounded-lg transition-all group">
+<div class="flex-1">
+<p class="text-sm font-bold text-on-surface">Push Notifications</p>
+<p class="text-xs text-on-surface-variant font-medium">New property matches and direct messages from Homestead.</p>
+</div>
+<input checked="" class="w-6 h-6 rounded-md text-primary bg-surface-container-highest border-none focus:ring-primary focus:ring-offset-0" type="checkbox"/>
+</div>
+</div>
+</section>
+<div class="flex justify-end gap-4 mt-12">
+<button class="px-8 py-4 font-bold text-on-surface-variant hover:bg-surface-dim rounded-full transition-all">Discard Changes</button>
+<button class="px-10 py-4 font-bold text-on-primary bg-gradient-to-r from-primary to-primary-container rounded-full shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all">Save Profile Changes</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual FAB Suppression: No FAB on Settings Page -->
+</body></html>

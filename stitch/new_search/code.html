@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Homestead | New Search</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#bfcd8f",
+                        "on-surface": "#1d1c0d",
+                        "on-secondary-container": "#606848",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#606c38",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#875f35",
+                        "secondary": "#5a6242",
+                        "inverse-surface": "#323120",
+                        "on-error-container": "#93000a",
+                        "outline": "#77786b",
+                        "secondary-fixed": "#dee7bf",
+                        "surface-container-highest": "#e7e3ca",
+                        "inverse-on-surface": "#f5f1d8",
+                        "on-tertiary-container": "#ffe1c8",
+                        "secondary-fixed-dim": "#c2cba4",
+                        "surface-variant": "#e7e3ca",
+                        "inverse-primary": "#bfcd8f",
+                        "on-surface-variant": "#46483c",
+                        "on-primary-container": "#dfedac",
+                        "surface-container": "#f2efd5",
+                        "on-tertiary-fixed": "#2c1600",
+                        "tertiary-fixed": "#ffdcbd",
+                        "surface": "#fefae0",
+                        "tertiary": "#6c471f",
+                        "surface-container-high": "#ede9cf",
+                        "primary-fixed": "#dbe9a9",
+                        "surface-tint": "#586330",
+                        "surface-dim": "#dedbc2",
+                        "outline-variant": "#c7c8b9",
+                        "background": "#fefae0",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#623f18",
+                        "on-primary-fixed-variant": "#404b1b",
+                        "error-container": "#ffdad6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#1d1c0d",
+                        "on-primary-fixed": "#171e00",
+                        "on-error": "#ffffff",
+                        "primary": "#485422",
+                        "secondary-container": "#dee7bf",
+                        "tertiary-fixed-dim": "#f0bd8b",
+                        "surface-container-low": "#f8f4db",
+                        "on-secondary-fixed-variant": "#424a2d",
+                        "surface-bright": "#fefae0",
+                        "on-secondary-fixed": "#171e06"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Be Vietnam Pro"],
+                        "label": ["Be Vietnam Pro"]
+                    }
+                },
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Be Vietnam Pro', sans-serif; }
+        h1, h2, h3, h4 { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface overflow-hidden">
+<!-- SideNavBar Component -->
+<aside class="fixed left-0 top-0 h-screen w-64 bg-[#485422] dark:bg-[#1d1c0d] flex flex-col h-full py-8 z-50">
+<div class="px-6 mb-10">
+<h1 class="text-2xl font-bold tracking-tighter text-[#fefae0]">Homestead</h1>
+<p class="text-xs opacity-70 text-[#fefae0] font-medium tracking-wide">SaaS Dashboard</p>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Dashboard (Inactive) -->
+<a class="flex items-center gap-3 text-[#fefae0]/70 hover:text-[#fefae0] px-4 py-3 mx-2 my-1 hover:bg-[#606c38]/50 transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium text-sm tracking-tight">Dashboard</span>
+</a>
+<!-- New Search (Active) -->
+<a class="flex items-center gap-3 bg-[#606c38] text-[#fefae0] rounded-full mx-2 my-1 px-4 py-3 font-semibold transition-all scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium text-sm tracking-tight">New Search</span>
+</a>
+<!-- Saved Shortlists (Inactive) -->
+<a class="flex items-center gap-3 text-[#fefae0]/70 hover:text-[#fefae0] px-4 py-3 mx-2 my-1 hover:bg-[#606c38]/50 transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined" data-icon="bookmark">bookmark</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium text-sm tracking-tight">Saved Shortlists</span>
+</a>
+<!-- Investment Settings (Inactive) -->
+<a class="flex items-center gap-3 text-[#fefae0]/70 hover:text-[#fefae0] px-4 py-3 mx-2 my-1 hover:bg-[#606c38]/50 transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium text-sm tracking-tight">Investment Settings</span>
+</a>
+<!-- Profile (Inactive) -->
+<a class="flex items-center gap-3 text-[#fefae0]/70 hover:text-[#fefae0] px-4 py-3 mx-2 my-1 hover:bg-[#606c38]/50 transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium text-sm tracking-tight">Profile</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<div class="p-4 rounded-xl bg-[#606c38]/30 border border-[#fefae0]/10">
+<p class="text-[10px] uppercase tracking-widest text-[#fefae0]/50 mb-2">System Health</p>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-primary-fixed-dim"></div>
+<span class="text-xs text-[#fefae0] font-medium">Market Live</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Workspace -->
+<main class="ml-64 relative min-h-screen">
+<!-- TopAppBar Component -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-20 bg-[#fefae0]/70 dark:bg-[#1d1c0d]/70 backdrop-blur-xl flex justify-end items-center px-12 gap-6 z-40">
+<button class="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-primary to-primary-container text-on-primary rounded-xl font-headline font-semibold text-sm hover:opacity-90 active:opacity-80 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                Quick Add Property
+            </button>
+<div class="h-10 w-10 rounded-full overflow-hidden border-2 border-primary-container">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="Professional portrait of a male real estate investor in a clean studio setting with warm natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEkBWNC4ZYeQmYExlOnW8SjMGHfa1Q5hmAhtOld3N94d15hCe8JdhTMaWquq1PQqpZw4zHlwJPRTXh9hqzNcYuYQ8ykhwGhcRiKWgdsG9k_rcylVl091QtI826E5mx5aRwKdxK-8DuEI1ahFSyiHL3lYkKAvKEBAZbBZUEy4JHTHfcvNPYOm_xzjExV94XFyZA5t0TkmpXrGZqVsD_Yp2NtReI5pGqsN5amXdkwQ2dApv1CwbQwCR379WtS_7iCKRfZBnsYk7In7Q"/>
+</div>
+</header>
+<!-- Content Area -->
+<div class="pt-20 h-screen flex">
+<!-- Filter Sidebar (Search Interface) -->
+<section class="w-[420px] bg-surface-container-low h-full flex flex-col p-8 overflow-y-auto no-scrollbar">
+<header class="mb-10">
+<h2 class="text-4xl font-extrabold tracking-tight text-primary mb-2">Find your sanctuary.</h2>
+<p class="text-on-surface-variant font-medium">Tell us what home feels like to you.</p>
+</header>
+<div class="space-y-8">
+<!-- Location Input -->
+<div class="group">
+<label class="block text-xs font-bold uppercase tracking-widest text-primary mb-3">Where do you want to live?</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary/60" data-icon="location_on">location_on</span>
+<input class="w-full bg-surface-container-highest border-none rounded-lg py-4 pl-12 pr-4 focus:ring-2 focus:ring-primary/30 text-on-surface placeholder:text-on-surface-variant/50 font-medium" placeholder="Neighborhood, city, or zip..." type="text"/>
+</div>
+</div>
+<!-- Budget Slider Area -->
+<div class="group">
+<label class="block text-xs font-bold uppercase tracking-widest text-primary mb-3">Budget Range</label>
+<div class="bg-surface-container-highest p-6 rounded-lg">
+<div class="flex justify-between items-end mb-4">
+<span class="text-2xl font-bold text-primary">$850k</span>
+<span class="text-xs font-medium text-on-surface-variant">Max: $2.4M</span>
+</div>
+<div class="h-2 w-full bg-surface-dim rounded-full relative">
+<div class="absolute left-0 top-0 h-full w-2/3 bg-primary rounded-full"></div>
+<div class="absolute left-2/3 top-1/2 -translate-y-1/2 -translate-x-1/2 w-6 h-6 bg-white border-4 border-primary rounded-full shadow-lg"></div>
+</div>
+</div>
+</div>
+<!-- Must Haves (Tags) -->
+<div>
+<label class="block text-xs font-bold uppercase tracking-widest text-primary mb-3">Must-haves</label>
+<div class="flex flex-wrap gap-2">
+<button class="px-4 py-2 bg-primary text-on-primary rounded-full text-sm font-medium flex items-center gap-2">
+                                Backyard <span class="material-symbols-outlined text-xs" data-icon="close">close</span>
+</button>
+<button class="px-4 py-2 bg-primary text-on-primary rounded-full text-sm font-medium flex items-center gap-2">
+                                20min commute <span class="material-symbols-outlined text-xs" data-icon="close">close</span>
+</button>
+<button class="px-4 py-2 bg-surface-container-highest text-on-surface-variant rounded-full text-sm font-medium hover:bg-surface-dim transition-colors">
+                                + Add amenity
+                            </button>
+</div>
+</div>
+<!-- Natural Language Insight (Hearth Container) -->
+<div class="bg-tertiary-container p-8 rounded-xl text-on-tertiary-container">
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-tertiary" data-icon="auto_awesome">auto_awesome</span>
+<div>
+<p class="font-headline font-bold text-lg leading-tight mb-2">Homestead Insight</p>
+<p class="text-sm opacity-90 leading-relaxed italic">"Based on your 20-minute commute to downtown, we're focusing on the Willow Creek and Oakhaven districts where average lots are 0.5+ acres."</p>
+</div>
+</div>
+</div>
+<!-- Search CTA -->
+<button class="w-full py-5 bg-primary text-on-primary rounded-xl font-headline font-bold text-lg shadow-xl shadow-primary/10 hover:translate-y-[-2px] transition-transform flex justify-center items-center gap-3">
+                        Analyze Properties
+                        <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<!-- Small Results Preview (Asymmetric) -->
+<div class="mt-12">
+<h3 class="text-xs font-bold uppercase tracking-widest text-primary mb-6">Discovery Queue</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="aspect-[4/5] rounded-lg overflow-hidden relative group cursor-pointer">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Modern minimalist wooden cabin in a dense forest with large glass windows and atmospheric morning mist" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQWaq0JH505XsHakx8AvB_2URgLeCbEuF6AZRuS4ENPoWm6xtNjIURWwQ22SRC56srJ7zX3Ac2NPSLyaTCe0X_1yV9y2VULx9h2hQSQxHTmwphuDHcqbOASnKcH8wD0Z_H0iU5wwN7xOXMa61CaivDmtFYEg-y71cM2piH_h9MC4T4Vrn87xVi97qGg3WGMNu2aPEvczp0yhVB_0WgH_8RPW6Dde8PFt3b8q3ziDpVe7pcfthnpqkdXpWekMJIVgH1kcwdE0sBkN4"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+<div class="absolute bottom-3 left-3">
+<p class="text-white font-bold text-sm">$1.2M</p>
+<p class="text-white/70 text-[10px]">Willow Creek</p>
+</div>
+</div>
+<div class="aspect-[4/5] rounded-lg overflow-hidden relative group cursor-pointer mt-4">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Elegant contemporary estate with a stone facade and lush manicured gardens under a clear blue sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVj5iGVaWl4J36d6mu4zPHJvSeHGBCpp9uVPlW8VvI9V8aMyvWLDeOVvUcIc8lbah9CZ3eqwTpI1IGJuEN197HidwmCCocbMiu1xBc3yo1RYDWXtqpNOOwAL_GFvXWH8GSfM5J5vF2RwNgc-KYpMWUoLtobMadcP8BLv4gl6OFt3nfryPWQ01Jem6XM_tWZ5oK19AZiZwPvDKzejkoDEUpv_gjvJy1dE02ZECsaV3MKdyeswuylutOL4_P_594DhUi66ZLzF-UhKw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+<div class="absolute bottom-3 left-3">
+<p class="text-white font-bold text-sm">$2.1M</p>
+<p class="text-white/70 text-[10px]">Oakhaven</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Map Area -->
+<section class="flex-1 bg-surface-container relative">
+<!-- Map Placeholder with custom visual style -->
+<div class="w-full h-full bg-[#f2efd5] overflow-hidden">
+<img class="w-full h-full object-cover opacity-60" data-alt="Top-down architectural map view of a high-end residential neighborhood with warm earth-toned terrain and soft shadows" data-location="Austin, Texas" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0tJEKiI612NAtedIXjxtASBYqoEf8CnjAIx66jiecN3sA-snvtVzARV_DXk-tACw10_OjJNZTcoO-ZOL6TMyzlTY0UAyMryVek-SS7PmPYEiFCX9l3GTKEhaNu_tvsSXXppn0JaAbLc6IosjTdt28FoYJeBXTcL5NdegOww-uDvAXqTJj2Kju5-H79apKxJajZVYuwkslukHF48Egk1Qb2Mpx7U0_jHOiP6goeiMOWk_cEzStU3g6ICDkSk1ee3wxjRwJnjjvZ7U"/>
+<!-- Floating Map Markers -->
+<div class="absolute top-1/4 left-1/3">
+<div class="bg-primary text-on-primary px-4 py-2 rounded-full font-bold shadow-xl border-4 border-white animate-bounce-slow flex items-center gap-2">
+<span class="text-sm">$1.2M</span>
+<div class="w-2 h-2 rounded-full bg-primary-fixed-dim"></div>
+</div>
+<div class="w-px h-6 bg-white mx-auto shadow-sm"></div>
+</div>
+<div class="absolute bottom-1/3 right-1/4">
+<div class="bg-primary-container text-on-primary-container px-4 py-2 rounded-full font-bold shadow-xl border-4 border-white flex items-center gap-2">
+<span class="text-sm">$2.1M</span>
+<div class="w-2 h-2 rounded-full bg-[#fefae0]"></div>
+</div>
+<div class="w-px h-6 bg-white mx-auto shadow-sm"></div>
+</div>
+<div class="absolute top-1/2 left-1/2">
+<div class="bg-tertiary text-on-tertiary px-4 py-2 rounded-full font-bold shadow-xl border-4 border-white flex items-center gap-2">
+<span class="text-sm">$950k</span>
+<div class="w-2 h-2 rounded-full bg-tertiary-fixed"></div>
+</div>
+<div class="w-px h-6 bg-white mx-auto shadow-sm"></div>
+</div>
+</div>
+<!-- Map Overlay Controls -->
+<div class="absolute bottom-8 right-8 flex flex-col gap-4">
+<div class="bg-surface/80 backdrop-blur-md p-2 rounded-full flex flex-col gap-2 shadow-2xl">
+<button class="w-12 h-12 rounded-full bg-white flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+<button class="w-12 h-12 rounded-full bg-white flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="remove">remove</span>
+</button>
+</div>
+<button class="w-12 h-12 rounded-full bg-white shadow-2xl flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="layers">layers</span>
+</button>
+</div>
+<!-- Floating Legend -->
+<div class="absolute top-8 left-8 bg-surface/80 backdrop-blur-md p-6 rounded-xl shadow-2xl max-w-xs">
+<h4 class="text-xs font-bold uppercase tracking-widest text-primary mb-4">Market Saturation</h4>
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+<span class="text-xs font-medium">High Match Potential</span>
+<span class="ml-auto text-[10px] font-bold text-primary/50">12 properties</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-tertiary"></div>
+<span class="text-xs font-medium">Emerging Markets</span>
+<span class="ml-auto text-[10px] font-bold text-primary/50">8 properties</span>
+</div>
+<div class="mt-4 pt-4 border-t border-outline-variant/30">
+<div class="flex items-center justify-between mb-2">
+<span class="text-[10px] font-bold text-primary/40">COMMUTE LAYER</span>
+<span class="text-[10px] font-bold text-primary">ENABLED</span>
+</div>
+<div class="w-full h-1 bg-surface-dim rounded-full overflow-hidden">
+<div class="w-3/4 h-full bg-primary-fixed-dim"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</body></html>

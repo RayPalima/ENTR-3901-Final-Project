@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#f8f4db",
+                        "inverse-surface": "#323120",
+                        "tertiary-fixed-dim": "#f0bd8b",
+                        "secondary-container": "#dee7bf",
+                        "on-tertiary-fixed": "#2c1600",
+                        "on-secondary": "#ffffff",
+                        "surface-container-highest": "#e7e3ca",
+                        "secondary": "#5a6242",
+                        "on-tertiary-fixed-variant": "#623f18",
+                        "on-secondary-fixed-variant": "#424a2d",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#dedbc2",
+                        "outline-variant": "#c7c8b9",
+                        "primary-fixed": "#dbe9a9",
+                        "surface": "#fefae0",
+                        "surface-container": "#f2efd5",
+                        "surface-bright": "#fefae0",
+                        "tertiary-fixed": "#ffdcbd",
+                        "on-primary-fixed": "#171e00",
+                        "background": "#fefae0",
+                        "surface-variant": "#e7e3ca",
+                        "on-secondary-fixed": "#171e06",
+                        "on-secondary-container": "#606848",
+                        "outline": "#77786b",
+                        "tertiary-container": "#875f35",
+                        "on-surface": "#1d1c0d",
+                        "inverse-on-surface": "#f5f1d8",
+                        "surface-container-high": "#ede9cf",
+                        "surface-tint": "#586330",
+                        "primary": "#485422",
+                        "on-background": "#1d1c0d",
+                        "primary-container": "#606c38",
+                        "primary-fixed-dim": "#bfcd8f",
+                        "on-primary-fixed-variant": "#404b1b",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#dfedac",
+                        "tertiary": "#6c471f",
+                        "error-container": "#ffdad6",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#c2cba4",
+                        "secondary-fixed": "#dee7bf",
+                        "on-surface-variant": "#46483c",
+                        "on-tertiary-container": "#ffe1c8",
+                        "on-error": "#ffffff",
+                        "inverse-primary": "#bfcd8f",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Be Vietnam Pro"],
+                        "label": ["Be Vietnam Pro"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #fefae0;
+            color: #1d1c0d;
+            font-family: 'Be Vietnam Pro', sans-serif;
+        }
+        .editorial-shadow {
+            box-shadow: 0 40px 60px -15px rgba(29, 28, 13, 0.06);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed">
+<aside class="bg-[#f8f4db] dark:bg-stone-950 h-screen w-64 fixed left-0 top-0 rounded-r-[3rem] no-border tonal-shift flat no shadows flex flex-col h-full py-8 space-y-2 z-50 hidden md:flex">
+<div class="px-8 mb-8">
+<h1 class="text-xl font-black text-[#485422] dark:text-[#ccd5ae] font-['Plus_Jakarta_Sans']">Homestead</h1>
+<p class="text-[10px] uppercase tracking-widest text-primary opacity-60 font-bold">Digital Sanctuary</p>
+</div>
+<nav class="flex-1 space-y-1">
+<div class="text-[#606c38] dark:text-stone-400 hover:bg-[#e7e3ca] dark:hover:bg-stone-800 rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 font-['Plus_Jakarta_Sans'] font-medium text-sm hover:translate-x-1 transition-all duration-200 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                Dashboard
+            </div>
+<div class="bg-gradient-to-r from-[#485422] to-[#606c38] text-white rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 font-['Plus_Jakarta_Sans'] font-medium text-sm transition-transform active:scale-95 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="home_work">home_work</span>
+                Properties
+            </div>
+<div class="text-[#606c38] dark:text-stone-400 hover:bg-[#e7e3ca] dark:hover:bg-stone-800 rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 font-['Plus_Jakarta_Sans'] font-medium text-sm hover:translate-x-1 transition-all duration-200 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+                Tenants
+            </div>
+<div class="text-[#606c38] dark:text-stone-400 hover:bg-[#e7e3ca] dark:hover:bg-stone-800 rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 font-['Plus_Jakarta_Sans'] font-medium text-sm hover:translate-x-1 transition-all duration-200 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+                Analytics
+            </div>
+<div class="text-[#606c38] dark:text-stone-400 hover:bg-[#e7e3ca] dark:hover:bg-stone-800 rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-3 font-['Plus_Jakarta_Sans'] font-medium text-sm hover:translate-x-1 transition-all duration-200 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+                Reports
+            </div>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full bg-primary text-on-primary py-4 rounded-xl font-headline font-bold text-sm flex items-center justify-center gap-2 editorial-shadow transition-transform active:scale-95">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+                Add Property
+            </button>
+<div class="mt-6 space-y-1">
+<div class="text-[#606c38] opacity-70 hover:opacity-100 rounded-full px-4 py-2 flex items-center gap-3 font-['Plus_Jakarta_Sans'] font-medium text-xs cursor-pointer">
+<span class="material-symbols-outlined text-sm" data-icon="help">help</span>
+                    Support
+                </div>
+<div class="text-[#606c38] opacity-70 hover:opacity-100 rounded-full px-4 py-2 flex items-center gap-3 font-['Plus_Jakarta_Sans'] font-medium text-xs cursor-pointer">
+<span class="material-symbols-outlined text-sm" data-icon="logout">logout</span>
+                    Log Out
+                </div>
+</div>
+</div>
+</aside>
+<main class="md:ml-64 min-h-screen pb-24 md:pb-12">
+<header class="bg-[#fefae0]/70 dark:bg-stone-900/70 backdrop-blur-md sticky top-0 z-40 w-full px-8 py-4 flex justify-between items-center shadow-[0_4px_60px_rgba(29,28,13,0.06)] font-['Plus_Jakarta_Sans']">
+<div class="flex items-center gap-6">
+<span class="text-2xl font-bold text-[#485422] dark:text-[#ccd5ae] italic md:hidden">Homestead</span>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-[#485422] dark:text-[#ccd5ae] font-bold border-b-2 border-[#485422] py-1 transition-colors duration-300" href="#">Browse</a>
+<a class="text-[#606c38] dark:text-stone-400 font-medium hover:bg-[#e7e3ca] dark:hover:bg-stone-700 px-3 py-1 rounded-lg transition-colors duration-300" href="#">Saved</a>
+<a class="text-[#606c38] dark:text-stone-400 font-medium hover:bg-[#e7e3ca] dark:hover:bg-stone-700 px-3 py-1 rounded-lg transition-colors duration-300" href="#">Collections</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-[#485422] hover:bg-[#e7e3ca] rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-[#485422] hover:bg-[#e7e3ca] rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-fixed">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="professional portrait of a woman in a sage green office environment with soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJhicrPzB4RR_LXryAK7KerdeDQKr6Kgf9wxCR8uWkaUK0OM2jKdq5NvAm9sWZoWJJhjCLIrMKokHlzn8FL1bnI7ue2ROMfEiWkj5ZNS4o9Ho9eXj_gRWkqSz4gtyPvvIXKdcRfBVR2UIuqBzrS0KmBjOhR1pwc9jFZKw0Csty3n62LOP8VSiYaAsX8FGpeQxzPphBELVk6C9bkfTlOvkY7NRCVfTvmkWYKWT5gAl4YDIh9Pp5wTEfoY9g9Dyr4Y2BMLHcWHYDclQ"/>
+</div>
+</div>
+</header>
+<section class="max-w-4xl mx-auto px-6 py-12 md:py-20">
+<div class="text-center mb-12">
+<h2 class="text-4xl md:text-5xl font-headline font-extrabold text-primary mb-4 tracking-tight">Find your sanctuary.</h2>
+<p class="text-secondary font-body max-w-lg mx-auto leading-relaxed">Our AI agent understands the feeling of home, not just the square footage.</p>
+</div>
+<div class="relative group">
+<div class="absolute -inset-1 bg-gradient-to-r from-primary/10 to-tertiary-container/10 rounded-xl blur opacity-75 group-focus-within:opacity-100 transition duration-1000 group-focus-within:duration-200"></div>
+<div class="relative flex items-center bg-surface-container-highest rounded-xl p-2 editorial-shadow">
+<div class="flex-1 flex items-center px-6">
+<span class="material-symbols-outlined text-primary/40 mr-4" data-icon="magic_button">magic_button</span>
+<input class="w-full bg-transparent border-none focus:ring-0 text-on-surface placeholder:text-outline text-lg font-body py-4" placeholder="Describe your ideal home..." type="text"/>
+</div>
+<button class="bg-primary text-on-primary px-8 py-4 rounded-xl font-headline font-bold flex items-center gap-2 hover:bg-primary-container transition-all active:scale-95">
+<span class="hidden md:inline">Search</span>
+<span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<div class="mt-4 flex flex-wrap justify-center gap-2">
+<span class="px-4 py-1.5 bg-surface-container-low border border-outline-variant/20 rounded-full text-xs font-medium text-secondary cursor-pointer hover:bg-surface-container-high transition-colors">"Quiet cottage near water"</span>
+<span class="px-4 py-1.5 bg-surface-container-low border border-outline-variant/20 rounded-full text-xs font-medium text-secondary cursor-pointer hover:bg-surface-container-high transition-colors">"Modern loft for a chef"</span>
+<span class="px-4 py-1.5 bg-surface-container-low border border-outline-variant/20 rounded-full text-xs font-medium text-secondary cursor-pointer hover:bg-surface-container-high transition-colors">"Sunny terrace garden"</span>
+</div>
+</div>
+</section>
+<section class="max-w-6xl mx-auto px-6 mb-20">
+<div class="flex items-end justify-between mb-8">
+<div>
+<span class="text-tertiary font-bold tracking-widest text-[10px] uppercase">Curated Discovery</span>
+<h3 class="text-3xl font-headline font-extrabold text-on-surface">Top 5 for You</h3>
+</div>
+<button class="text-primary font-bold text-sm flex items-center gap-1 hover:underline">
+                    View all recommendations
+                    <span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<div class="group bg-surface-container-low rounded-xl overflow-hidden hover:translate-y-[-4px] transition-all duration-300 lg:col-span-2 flex flex-col md:flex-row">
+<div class="relative h-64 md:h-full md:w-2/5 overflow-hidden">
+<img alt="Modern villa" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="architectural masterpiece modern villa with large floor to ceiling windows reflecting a calm sunset across a landscaped garden" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9jTYwQ3VmsReZeFKu0QzTsmuA6UGYGZPKzC9aRLyBCTft4oFx-8Iflr_oYvY25zkmU74Znn-iZyYJayLZs69GlXYqkWqaN2Y0QbdXrPc4R34pGVvTXcM5xp9pnN6ehbkZEUKRqLKNhG0zEeGyYsZiu9CJYQUjs9Cjezu2iQ47wrxiTuGFj0Y-ipPR1Sie-iuO4WRstGsuCAeJJI31YYJAbyR_q68EuCBtw7adXP97uFBOrDBBiPuKk00xI9mVjPYXA5F1TL_pbQo"/>
+<div class="absolute top-4 left-4 bg-primary text-on-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter">Match 98%</div>
+</div>
+<div class="p-8 md:w-3/5 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-2">
+<h4 class="text-2xl font-headline font-bold text-primary">The Obsidian Glasshouse</h4>
+<span class="text-xl font-headline font-extrabold text-on-surface">$1,450,000</span>
+</div>
+<p class="text-secondary font-medium flex items-center gap-1 text-sm mb-6">
+<span class="material-symbols-outlined text-sm" data-icon="location_on">location_on</span>
+                                Laurel Canyon, Los Angeles
+                            </p>
+<div class="bg-tertiary-container/20 p-4 rounded-lg mb-4">
+<div class="flex items-center gap-2 text-tertiary mb-1">
+<span class="material-symbols-outlined text-sm" data-icon="smart_toy">smart_toy</span>
+<span class="text-[10px] font-bold uppercase tracking-widest">AI Agent Insight</span>
+</div>
+<p class="text-on-tertiary-container text-sm font-medium leading-relaxed italic">"Perfect for long-term growth due to the new transit link and high-rated nearby art district."</p>
+</div>
+</div>
+<div class="flex items-center gap-4 pt-4 border-t border-outline-variant/10">
+<div class="flex items-center gap-1 text-xs text-outline font-medium"><span class="material-symbols-outlined text-sm" data-icon="bed">bed</span> 4 Beds</div>
+<div class="flex items-center gap-1 text-xs text-outline font-medium"><span class="material-symbols-outlined text-sm" data-icon="bathtub">bathtub</span> 3 Baths</div>
+<div class="flex items-center gap-1 text-xs text-outline font-medium"><span class="material-symbols-outlined text-sm" data-icon="square_foot">square_foot</span> 3,200 sqft</div>
+</div>
+</div>
+</div>
+<div class="group bg-surface-container-low rounded-xl overflow-hidden hover:translate-y-[-4px] transition-all duration-300 flex flex-col">
+<div class="relative h-48 overflow-hidden">
+<img alt="Cottage" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="quaint stone cottage with climbing ivy and a bright red door surrounded by a lush english flower garden in spring" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_UIm2IX8NZLb5rxojwbLoFpu-Vazk57TsecDWl-fT6UYh3gygEvUTYaPGJxq_HAmKtZyy5rY1F6xb_eiE492jxft85VFSlf8ZX3DQ0EAKSKWMnB_JYLhSafcSIGMcvGFgrAZ-dtJ0awWByveHr8paQWoOzuq1dmpLP1CEdbelecpoin2BY8G3QvjqRaIFJgIV9gUW7Y0fjeW7muH5OYr3V-XOST24yvUaMRwcyhT4eZIFpA9VPFBk5mWX_8AS3zDdTeBdTBCKGCU"/>
+<div class="absolute top-4 left-4 bg-tertiary text-on-tertiary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter">Highly Viewed</div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="mb-4">
+<h4 class="text-xl font-headline font-bold text-primary">Elderberry Cottage</h4>
+<p class="text-secondary font-medium flex items-center gap-1 text-xs">$820,000 • Cotswolds, UK</p>
+</div>
+<div class="bg-primary-fixed/30 p-3 rounded-lg mb-4 flex-1">
+<p class="text-on-primary-fixed-variant text-xs leading-relaxed italic">"Matches your preference for 'authentic textures' and 'quiet surroundings'."</p>
+</div>
+<button class="w-full border border-primary text-primary py-2 rounded-xl text-xs font-bold hover:bg-primary hover:text-on-primary transition-colors">Details</button>
+</div>
+</div>
+<div class="group bg-surface-container-low rounded-xl overflow-hidden hover:translate-y-[-4px] transition-all duration-300 flex flex-col">
+<div class="relative h-48 overflow-hidden">
+<img alt="Modern condo" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="chic minimalist high-rise apartment interior with sweeping city skyline views at twilight through enormous windows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3P54JRQWOpuakZDBPdUyu10_xpx7GRaZuCF2Kz4ZeikTbEKimrOVmIi8fweX1dZmaLPCSfpGkhxi1EpZJ5irmyx6COOSUr4Moihf4ilvFGa_56RuBt1_kSOUQifwevw0iIlLzCYhjx1i3HpuG4ZZdecPNU-ZoihWn-A8-Mn5AqOoI6XTw-nUIB4_Mb4nDERQop20nuVggbQfEPFy4-9RWrDZr8NcppdVei-SU3XyEUc7dnTOsYxolWZs-m3-CY9-hrhKrfM3flDw"/>
+<div class="absolute top-4 left-4 bg-primary text-on-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter">Investment Pick</div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="mb-4">
+<h4 class="text-xl font-headline font-bold text-primary">Skyline Loft 4B</h4>
+<p class="text-secondary font-medium flex items-center gap-1 text-xs">$1,100,000 • Austin, TX</p>
+</div>
+<div class="bg-primary-fixed/30 p-3 rounded-lg mb-4 flex-1">
+<p class="text-on-primary-fixed-variant text-xs leading-relaxed italic">"Projected 12% rental yield based on local tech hub expansion."</p>
+</div>
+<button class="w-full border border-primary text-primary py-2 rounded-xl text-xs font-bold hover:bg-primary hover:text-on-primary transition-colors">Details</button>
+</div>
+</div>
+<div class="group bg-surface-container-low rounded-xl overflow-hidden hover:translate-y-[-4px] transition-all duration-300 flex flex-col">
+<div class="relative h-48 overflow-hidden">
+<img alt="Lake house" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="stunning wood and glass lakefront home reflecting in still deep blue water with pine forest in the background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnhvtOM6X-qdPdTGGt4y2HiMzihexbP4bMXd5LQAm7VLIEjdlTXL-tYgT1zGSsUaYXozNjMV5yFyeLQn3ujz9CCK_ynxq8R8bMhYvIw_6KpdzfjXkfMuvIoHC0qevmuu3KNAEEyBBYrJsHaY3H6ynb-9AlGyVMDAkNp4FGayEd1slqSHbeRrmH-JgmqrbEjmlcK4PXAdtRcqGgeLqdkbF5WF9dOwQp8hWiZ35ztlX46ZOXsVjfOzHoJKQIlRPIjKBlKWWtSc1cdy4"/>
+<div class="absolute top-4 left-4 bg-primary text-on-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter">Quiet Oasis</div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="mb-4">
+<h4 class="text-xl font-headline font-bold text-primary">Blue Pine Retreat</h4>
+<p class="text-secondary font-medium flex items-center gap-1 text-xs">$950,000 • Tahoe, CA</p>
+</div>
+<div class="bg-primary-fixed/30 p-3 rounded-lg mb-4 flex-1">
+<p class="text-on-primary-fixed-variant text-xs leading-relaxed italic">"Ideal layout for remote work with high-speed fiber already installed."</p>
+</div>
+<button class="w-full border border-primary text-primary py-2 rounded-xl text-xs font-bold hover:bg-primary hover:text-on-primary transition-colors">Details</button>
+</div>
+</div>
+<div class="group bg-surface-container-low rounded-xl overflow-hidden hover:translate-y-[-4px] transition-all duration-300 flex flex-col">
+<div class="relative h-48 overflow-hidden">
+<img alt="Modernist home" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="desert modernist house with flat roof and cactus landscaping against a backdrop of purple mountains and golden sand" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYCVcSK5Gkl17UPp9Iz9UpIGOqT0MwuXZ0YtmfzPyHY3-PTjIw7bNO8rTp759GLom542cHB__jVFEt0aBH81AKWC7rJpWSrgHY7wxrmPOxGuxMaX9XNchXx6baEPZwalqAkz0kaZda_gDN_oJfKySq9-J8lupoE-pZ9Ry9LSI-neEuSUC3sVM0rZ_f0D7Qte2d8CakR0mOu7EIBG8xxLgTqkcqOSsZ_N0an8CYVI1ANAxSPLPgTh_hGL0it0Kg8mPPU205jRbwXOs"/>
+<div class="absolute top-4 left-4 bg-tertiary text-on-tertiary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter">Unique find</div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="mb-4">
+<h4 class="text-xl font-headline font-bold text-primary">Saguaro Sands</h4>
+<p class="text-secondary font-medium flex items-center gap-1 text-xs">$1,250,000 • Sedona, AZ</p>
+</div>
+<div class="bg-primary-fixed/30 p-3 rounded-lg mb-4 flex-1">
+<p class="text-on-primary-fixed-variant text-xs leading-relaxed italic">"Eco-friendly cooling systems reduce annual utility costs by 40%."</p>
+</div>
+<button class="w-full border border-primary text-primary py-2 rounded-xl text-xs font-bold hover:bg-primary hover:text-on-primary transition-colors">Details</button>
+</div>
+</div>
+</div>
+</section>
+<section class="max-w-6xl mx-auto px-6 mb-20">
+<div class="bg-tertiary-container text-on-tertiary-container rounded-xl p-12 relative overflow-hidden flex flex-col md:flex-row items-center gap-8 editorial-shadow">
+<div class="z-10 relative md:w-2/3">
+<h3 class="text-3xl font-headline font-extrabold mb-4">Start your journey home.</h3>
+<p class="text-lg opacity-80 font-body mb-8">Let Homestead handle the complexity of financing, legal, and inspections while you focus on the dream.</p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-primary text-on-primary px-8 py-3 rounded-full font-headline font-bold text-sm shadow-xl active:scale-95 transition-transform">Get Started</button>
+<button class="bg-on-tertiary-container/10 border border-on-tertiary-container/20 text-on-tertiary-container px-8 py-3 rounded-full font-headline font-bold text-sm hover:bg-on-tertiary-container/20 transition-all">Learn more</button>
+</div>
+</div>
+<div class="absolute right-0 top-0 h-full w-1/3 opacity-20 hidden md:block">
+<img alt="Keys" class="w-full h-full object-cover" data-alt="close-up of a vintage brass key resting on a rustic wooden table with soft morning light and blurred garden background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJ1j676iKCBXLr596RUKUXbFu0roRR6Rl9GBsmuvLIhujFePpzL9CSpyol3RsHTOvbtIbkTJ4RjMRhqtCesHKL3fnmiT671cnF6MEYkojoNw1BxVhG5SNLNzYW5P-3o5Bfeb-xA50rLYg5sY1fRuJxQNvpEmKCWPHW6Q9-KxSZGrRHw2HrTWDmpp57sxZfEb_SZ9yPCCxg4V2MLGPZVy4iOJkACsdM87obUq2roh9t8DaBZ8N2CMjmpPslN1XP_LbqRunaUrjRIR0"/>
+</div>
+</div>
+</section>
+</main>
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface/70 backdrop-blur-xl border-t border-outline-variant/10 px-8 py-4 flex justify-between items-center z-50">
+<div class="flex flex-col items-center gap-1 text-[#485422]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">explore</span>
+<span class="text-[10px] font-bold">Browse</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-outline">
+<span class="material-symbols-outlined">favorite</span>
+<span class="text-[10px] font-medium">Saved</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-outline">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span class="text-[10px] font-medium">Agent</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-outline">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</div>
+</nav>
+</body></html>
