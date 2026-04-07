@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#bfcd8f",
+                    "on-surface": "#1d1c0d",
+                    "on-secondary-container": "#606848",
+                    "on-primary": "#ffffff",
+                    "primary-container": "#606c38",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-container": "#875f35",
+                    "secondary": "#5a6242",
+                    "inverse-surface": "#323120",
+                    "on-error-container": "#93000a",
+                    "outline": "#77786b",
+                    "secondary-fixed": "#dee7bf",
+                    "surface-container-highest": "#e7e3ca",
+                    "inverse-on-surface": "#f5f1d8",
+                    "on-tertiary-container": "#ffe1c8",
+                    "secondary-fixed-dim": "#c2cba4",
+                    "surface-variant": "#e7e3ca",
+                    "inverse-primary": "#bfcd8f",
+                    "on-surface-variant": "#46483c",
+                    "on-primary-container": "#dfedac",
+                    "surface-container": "#f2efd5",
+                    "on-tertiary-fixed": "#2c1600",
+                    "tertiary-fixed": "#ffdcbd",
+                    "surface": "#fefae0",
+                    "tertiary": "#6c471f",
+                    "surface-container-high": "#ede9cf",
+                    "primary-fixed": "#dbe9a9",
+                    "surface-tint": "#586330",
+                    "surface-dim": "#dedbc2",
+                    "outline-variant": "#c7c8b9",
+                    "background": "#fefae0",
+                    "error": "#ba1a1a",
+                    "on-tertiary-fixed-variant": "#623f18",
+                    "on-primary-fixed-variant": "#404b1b",
+                    "error-container": "#ffdad6",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "on-background": "#1d1c0d",
+                    "on-primary-fixed": "#171e00",
+                    "on-error": "#ffffff",
+                    "primary": "#485422",
+                    "secondary-container": "#dee7bf",
+                    "tertiary-fixed-dim": "#f0bd8b",
+                    "surface-container-low": "#f8f4db",
+                    "on-secondary-fixed-variant": "#424a2d",
+                    "surface-bright": "#fefae0",
+                    "on-secondary-fixed": "#171e06"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Be Vietnam Pro"],
+                    "label": ["Be Vietnam Pro"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Be Vietnam Pro', sans-serif; }
+        h1, h2, h3, h4 { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .editorial-shadow {
+            box-shadow: 0 40px 60px -15px rgba(29, 28, 13, 0.06);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary-fixed-dim">
+<!-- Side Navigation Shell (Refined Styling from SCREEN_2/SCREEN_8) -->
+<aside class="bg-[#f8f4db] dark:bg-stone-950 h-screen w-72 fixed left-0 top-0 flex flex-col py-8 z-50">
+<div class="px-8 mb-10">
+<h1 class="text-xl font-extrabold text-[#485422] tracking-tight">Homestead</h1>
+<p class="text-[10px] uppercase tracking-widest text-[#606c38] font-bold opacity-70">Digital Sanctuary</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="text-[#606c38] dark:text-[#c7c8b9] mx-4 py-3 px-6 flex items-center gap-4 hover:bg-[#e7e3ca] dark:hover:bg-stone-800 rounded-full transition-all group" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="grid_view">grid_view</span>
+<span class="font-medium text-sm">Dashboard</span>
+</a>
+<a class="text-[#606c38] dark:text-[#c7c8b9] mx-4 py-3 px-6 flex items-center gap-4 hover:bg-[#e7e3ca] dark:hover:bg-stone-800 rounded-full transition-all group" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="search">search</span>
+<span class="font-medium text-sm">New Search</span>
+</a>
+<!-- Active State: Saved Shortlists -->
+<a class="bg-[#485422] text-[#fefae0] rounded-full mx-4 py-3 px-6 flex items-center gap-4 shadow-lg shadow-[#485422]/20" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="bookmark" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+<span class="font-medium text-sm">Saved Shortlists</span>
+</a>
+<a class="text-[#606c38] dark:text-[#c7c8b9] mx-4 py-3 px-6 flex items-center gap-4 hover:bg-[#e7e3ca] dark:hover:bg-stone-800 rounded-full transition-all group" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="settings_input_component">settings_input_component</span>
+<span class="font-medium text-sm">Investment Settings</span>
+</a>
+<a class="text-[#606c38] dark:text-[#c7c8b9] mx-4 py-3 px-6 flex items-center gap-4 hover:bg-[#e7e3ca] dark:hover:bg-stone-800 rounded-full transition-all group" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="person">person</span>
+<span class="font-medium text-sm">Profile</span>
+</a>
+</nav>
+<div class="px-8 mt-auto pt-8 border-t border-outline-variant/10">
+<div class="bg-tertiary-container/10 p-6 rounded-lg mb-8">
+<p class="text-xs font-bold text-tertiary-fixed-dim uppercase tracking-tighter mb-2">Current Plan</p>
+<p class="text-primary font-bold text-sm mb-4">Standard Hearth</p>
+<button class="w-full py-2.5 px-4 bg-primary text-on-primary rounded-full text-xs font-bold transition-transform active:scale-95">Upgrade Plan</button>
+</div>
+<div class="space-y-1">
+<a class="text-[#606c38] dark:text-[#c7c8b9] py-2 px-4 flex items-center gap-3 hover:bg-[#e7e3ca] rounded-full transition-all text-sm" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="contact_support">contact_support</span>
+                Support
+            </a>
+<a class="text-error py-2 px-4 flex items-center gap-3 hover:bg-error-container/50 rounded-full transition-all text-sm" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="logout">logout</span>
+                Logout
+            </a>
+</div>
+</div>
+</aside>
+<!-- Top App Bar -->
+<header class="fixed top-0 right-0 w-[calc(100%-18rem)] h-24 bg-[#fefae0]/70 backdrop-blur-xl flex justify-between items-center px-12 z-40">
+<div>
+<h2 class="text-3xl font-extrabold text-primary tracking-tight">Saved Shortlists</h2>
+</div>
+<div class="flex items-center gap-6">
+<button class="flex items-center gap-2 bg-primary text-on-primary px-8 py-3 rounded-full font-headline font-bold text-sm shadow-xl active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-xl">add</span>
+            Quick Add Property
+        </button>
+<div class="flex items-center gap-3 bg-surface-container-high pl-2 pr-4 py-1.5 rounded-full">
+<img alt="User Profile" class="w-8 h-8 rounded-full object-cover" data-alt="close-up portrait of a professional woman with a friendly smile in a bright sunlit office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDN-nCVIdAoURRjtlI7aquYVz1SP5k0JcPwyA5YzbrOQfKaGEvV_rGFY3ogUsevSdChy5AwLrusyuQLKtfGa4OWx9wy1IiHFH6b_BH1cN6FVGzx7zEOc3o9b6Z9LeYDQsh-SO-fIj7Km1sCxSGpX1O4PIkHxzkZFd71y3kubGoMWSvvcfdQoUREWREFRKZ9sjFQqaYFYKCWceLT9EDeMejckadl9tx73fbfYcJZhmUCFe7d_YDInwTeQT9lbSYb_kWxENXzM4C8vhw"/>
+<span class="text-sm font-bold text-primary">Jane Doe</span>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="ml-72 pt-24 min-h-screen bg-surface-container-low">
+<div class="p-12 max-w-7xl mx-auto">
+<!-- Context Bar -->
+<div class="flex items-center justify-between mb-10">
+<div class="flex gap-4">
+<span class="bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium">3 Shortlists</span>
+<span class="bg-tertiary/10 text-tertiary px-4 py-2 rounded-full text-sm font-medium">Updated 2h ago</span>
+</div>
+<div class="flex items-center gap-4 bg-surface rounded-full p-1.5 shadow-sm">
+<button class="bg-primary text-on-primary px-6 py-2 rounded-full text-sm font-bold shadow-md">Grid View</button>
+<button class="text-on-surface-variant px-6 py-2 rounded-full text-sm font-medium hover:bg-surface-variant transition-colors">Compare Mode</button>
+</div>
+</div>
+<!-- Hearth Container (Hero Metric Highlight) -->
+<div class="bg-tertiary-container text-on-tertiary-fixed mb-12 p-12 rounded-xl flex items-center justify-between shadow-sm relative overflow-hidden editorial-shadow">
+<div class="relative z-10 max-w-lg">
+<h3 class="text-3xl font-extrabold tracking-tight mb-4">Investment Sweet Spot</h3>
+<p class="text-lg opacity-80 leading-relaxed">Your current criteria favors multi-family units in emerging tech hubs. You have 3 properties matching &gt;90% of your risk profile.</p>
+</div>
+<div class="relative z-10 flex gap-8">
+<div class="text-center">
+<div class="text-4xl font-black text-primary">8.4%</div>
+<div class="text-xs font-bold uppercase tracking-widest opacity-60">Avg. ROI</div>
+</div>
+<div class="text-center border-l border-on-tertiary-fixed/10 pl-8">
+<div class="text-4xl font-black text-primary">5.2%</div>
+<div class="text-xs font-bold uppercase tracking-widest opacity-60">Avg. Cap Rate</div>
+</div>
+</div>
+<!-- Abstract Texture Background -->
+<div class="absolute right-0 top-0 h-full w-1/2 bg-gradient-to-l from-tertiary/20 to-transparent pointer-events-none"></div>
+</div>
+<!-- Bento Grid of Property Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<div class="bg-surface rounded-lg overflow-hidden group hover:shadow-xl transition-all duration-500 flex flex-col h-full border border-outline-variant/10">
+<div class="h-64 relative overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="modern luxury residence with minimalist architecture and glass walls at twilight with warm interior lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjJKqK-oUuyABdQH7fDHJ3m_i5bW6OpAzP_FDvf6RjOPLc-pXU6wdWe0xGhrvKr6pCUS_9fRVv7ZvEd5ahZuLftPQqSpnR992cwC4K-5J4YM9wOV3wC3o_TGm90riTZGhi5A7VF5_oP8C9KD9NSStAvf6FOkItmaOeJCNFlABMKiKzU0vPtVB1APo9M7BdzIVTTaIwfNkIZ8gw69SJBH-ny7jPzHsWeyN-5zMda_L3ffTJRXJInHB3xQ9Dv3zVkWEW6uTYslWtNNY"/>
+<div class="absolute top-4 left-4 bg-primary text-on-primary px-3 py-1 rounded-full text-xs font-bold shadow-lg">98% Match</div>
+<div class="absolute top-4 right-4 bg-surface/90 backdrop-blur-md p-2 rounded-full shadow-md text-primary cursor-pointer hover:bg-primary hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</div>
+</div>
+<div class="p-8 flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h4 class="text-xl font-bold text-on-surface mb-1">Oakwood Manor</h4>
+<p class="text-on-surface-variant text-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">location_on</span>
+                                124 Heritage Blvd, Austin, TX
+                            </p>
+</div>
+<div class="text-right">
+<span class="text-2xl font-black text-primary">$845,000</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-auto">
+<div class="bg-surface-container p-4 rounded-xl">
+<p class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60">ROI Forecast</p>
+<p class="text-lg font-black text-primary">12.4%</p>
+</div>
+<div class="bg-surface-container p-4 rounded-xl">
+<p class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60">Cap Rate</p>
+<p class="text-lg font-black text-primary">6.8%</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface rounded-lg overflow-hidden group hover:shadow-xl transition-all duration-500 flex flex-col h-full border border-outline-variant/10">
+<div class="h-64 relative overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="stately colonial brick house with a manicured front lawn and large white windows in a quiet suburban neighborhood" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzb9LDZu55qIOZj_Khbs5DO3xmyIdAMSC9N3XxzFjGfwRFAE974Wl9N2xHDiqTwNWwJ7yz54ZdDT0ZEd4gXULyUlUiSiPkYMZJE0Ze0NPVqC3IxwGXg1IxuXjMoxh-a_sxbIGVklSrgvcFl0lTqZ1KXf_evSqdqMfpPnu-KHEEZH1760UgBdrBXZlb3PaE7nxrG1ZhDW1mrDmAhhGBLVSf6Zu6EflorI2mCOWeLIUIJFKjE3Bde7YAIqkIsjGbQi-XQKWiI71e8t4"/>
+<div class="absolute top-4 left-4 bg-primary text-on-primary px-3 py-1 rounded-full text-xs font-bold shadow-lg">82% Match</div>
+<div class="absolute top-4 right-4 bg-surface/90 backdrop-blur-md p-2 rounded-full shadow-md text-primary cursor-pointer hover:bg-primary hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</div>
+</div>
+<div class="p-8 flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h4 class="text-xl font-bold text-on-surface mb-1">Crestview Estates</h4>
+<p class="text-on-surface-variant text-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">location_on</span>
+                                55 Skyline Drive, Boulder, CO
+                            </p>
+</div>
+<div class="text-right">
+<span class="text-2xl font-black text-primary">$1.2M</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-auto">
+<div class="bg-surface-container p-4 rounded-xl">
+<p class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60">ROI Forecast</p>
+<p class="text-lg font-black text-primary">9.1%</p>
+</div>
+<div class="bg-surface-container p-4 rounded-xl">
+<p class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60">Cap Rate</p>
+<p class="text-lg font-black text-primary">5.2%</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface rounded-lg overflow-hidden group hover:shadow-xl transition-all duration-500 flex flex-col h-full border border-outline-variant/10">
+<div class="h-64 relative overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="contemporary suburban home with dark wood accents and architectural landscaping at sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWWp8yO3hTpHG_z-jjQcX3aEVlvD2g2275v7sjloutEJqwN5_unEGdme9qa2mLsEEr9S2sPSNLdSBmHF62tpqHDPXddlhjt7HuorjMWQF1D2aV0plmly2yCRKOiPdOcCVc_DFqwswS5Ns0iImgcgzqEW7uE82cKxgDgzTmiMcV38UYYI3y5AvSyCbRvtv_TVbEuASCGFnQTuyd9_fG2fgqyTSa_4g3QmG2f8gydtBuOr1q9I0GxCCmY464OdXI7aWDK06wQvOGwEc"/>
+<div class="absolute top-4 left-4 bg-primary text-on-primary px-3 py-1 rounded-full text-xs font-bold shadow-lg">74% Match</div>
+<div class="absolute top-4 right-4 bg-surface/90 backdrop-blur-md p-2 rounded-full shadow-md text-primary cursor-pointer hover:bg-primary hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</div>
+</div>
+<div class="p-8 flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h4 class="text-xl font-bold text-on-surface mb-1">Willow Brook Loft</h4>
+<p class="text-on-surface-variant text-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">location_on</span>
+                                88 River Walk, Portland, OR
+                            </p>
+</div>
+<div class="text-right">
+<span class="text-2xl font-black text-primary">$620,000</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-auto">
+<div class="bg-surface-container p-4 rounded-xl">
+<p class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60">ROI Forecast</p>
+<p class="text-lg font-black text-primary">15.2%</p>
+</div>
+<div class="bg-surface-container p-4 rounded-xl">
+<p class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60">Cap Rate</p>
+<p class="text-lg font-black text-primary">7.5%</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Deep Comparison Table Area -->
+<div class="mt-20">
+<div class="flex items-center gap-4 mb-8">
+<h3 class="text-2xl font-extrabold text-[#485422]">Deep Comparison</h3>
+<div class="h-px flex-1 bg-outline-variant/30"></div>
+</div>
+<div class="bg-surface-container-high rounded-xl p-10 editorial-shadow">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-separate border-spacing-y-4">
+<thead>
+<tr class="text-on-surface-variant text-xs font-bold uppercase tracking-widest">
+<th class="pb-6 px-6">Metric</th>
+<th class="pb-6 px-6 text-primary">Oakwood Manor</th>
+<th class="pb-6 px-6 text-primary">Crestview Estates</th>
+<th class="pb-6 px-6 text-primary">Willow Brook Loft</th>
+</tr>
+</thead>
+<tbody class="text-on-surface">
+<tr class="bg-surface/80 rounded-xl overflow-hidden shadow-sm">
+<td class="py-6 px-6 font-bold rounded-l-xl">Address</td>
+<td class="py-6 px-6 text-sm">Austin, TX</td>
+<td class="py-6 px-6 text-sm">Boulder, CO</td>
+<td class="py-6 px-6 text-sm rounded-r-xl">Portland, OR</td>
+</tr>
+<tr class="bg-surface/80 rounded-xl overflow-hidden shadow-sm">
+<td class="py-6 px-6 font-bold rounded-l-xl">Price</td>
+<td class="py-6 px-6 font-black">$845,000</td>
+<td class="py-6 px-6 font-black">$1,200,000</td>
+<td class="py-6 px-6 font-black rounded-r-xl">$620,000</td>
+</tr>
+<tr class="bg-surface/80 rounded-xl overflow-hidden shadow-sm">
+<td class="py-6 px-6 font-bold rounded-l-xl">ROI Forecast</td>
+<td class="py-6 px-6"><span class="bg-primary/10 text-primary px-3 py-1 rounded-full font-bold">12.4%</span></td>
+<td class="py-6 px-6"><span class="bg-primary/10 text-primary px-3 py-1 rounded-full font-bold">9.1%</span></td>
+<td class="py-6 px-6 rounded-r-xl"><span class="bg-primary/10 text-primary px-3 py-1 rounded-full font-bold">15.2%</span></td>
+</tr>
+<tr class="bg-surface/80 rounded-xl overflow-hidden shadow-sm">
+<td class="py-6 px-6 font-bold rounded-l-xl">Cap Rate</td>
+<td class="py-6 px-6 font-medium">6.8%</td>
+<td class="py-6 px-6 font-medium">5.2%</td>
+<td class="py-6 px-6 font-medium rounded-r-xl">7.5%</td>
+</tr>
+<tr class="bg-surface/80 rounded-xl overflow-hidden shadow-sm">
+<td class="py-6 px-6 font-bold rounded-l-xl">WalkScore</td>
+<td class="py-6 px-6 text-tertiary font-bold">78/100</td>
+<td class="py-6 px-6 text-tertiary font-bold">45/100</td>
+<td class="py-6 px-6 text-tertiary font-bold rounded-r-xl">92/100</td>
+</tr>
+<tr class="bg-surface/80 rounded-xl overflow-hidden shadow-sm">
+<td class="py-6 px-6 font-bold rounded-l-xl">Appreciation</td>
+<td class="py-6 px-6 text-sm">+4.2% / yr</td>
+<td class="py-6 px-6 text-sm">+6.8% / yr</td>
+<td class="py-6 px-6 text-sm rounded-r-xl">+3.5% / yr</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Comparison Selection Float (Contextual Action) -->
+<div class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-[#1d1c0d] text-[#fefae0] px-8 py-4 rounded-full flex items-center gap-8 shadow-2xl z-50 border border-white/10 backdrop-blur-lg">
+<div class="flex items-center gap-2">
+<div class="flex -space-x-3">
+<div class="w-8 h-8 rounded-full border-2 border-[#1d1c0d] overflow-hidden bg-primary-fixed">
+<img alt="prop1" data-alt="thumbnail of modern residence" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD037nhJmy0GZhf5Vvq2SBtlyjQPTK84P_goFRQpX_w1o_r0V2WKmUpbuEAsYnL1OUrJcNEZq5e6py1Uzy1_TEFkG5SNLTSHXHxXHRV89tNB5wJrLY0KgTFBhusj89u_NLkcfbGDQ_n8Cc8DqMTLdFl4NsjUIkNzZaGJCK_lf_Qz4kBydcDDiyhtcdzHzUHWuDU_R1cwmFcp_kr6rwakDM6BLYfuJSx2tHpZ-7eTBaXSyHyyIYaoLqUQqv-DxDfUkXtGlZ7E26pzJQ"/>
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-[#1d1c0d] overflow-hidden bg-primary-fixed">
+<img alt="prop2" data-alt="thumbnail of colonial brick house" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfjaDTPBXS63ACK8-1BkoxbJjvkJHaoJBTBjw42BmTK19ZrScl1Fo-LRZZVnT7pFHNivHAqqu4Lkt7Pg4JM90jY8AjoP89koi0ARvkWz3up-OvvWfrD_v-VKNyvViE2PuCeWmS0av_QhgvIzucEkFhJ6GO5btGQ91T3hdD_FYZljpZSu7s7yOxLmVC11i2c3p8pKspSHhWzKhN5l_6hKBf50r2wxNIvHkn7pIlGgXscH3Il_4iwVKkWo-NduvTYPgpZXoKSKsgEIk"/>
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-[#1d1c0d] overflow-hidden bg-primary-fixed">
+<img alt="prop3" data-alt="thumbnail of suburban house" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqWRdsrfOgL0f-b13FcBpOsXahaGYsLswq_45CXFTgb6g3RSCobus-neVMrpieX5CSwFGfdJypYXeKqbryOMO3KLNtNoqkajOdG3TRCLoI0wJdTbUaDM1rOyPH2a7ginNhzlrKi23M7zPhJBAYm6FgEeI9gQL1MmPOvRrggqYTTOB9B94YwjrMehWOFUVCNxQrBKK_vEBRJUnyK2ePdEaOyyRiJ7mR5GuxkdOC9jMDDaRxSEzp4xBRU_Sye8k2n4XUkX4A7TalSxE"/>
+</div>
+</div>
+<p class="text-sm font-semibold ml-4">3 properties selected</p>
+</div>
+<div class="h-6 w-px bg-white/20"></div>
+<button class="text-primary-fixed-dim font-bold hover:text-primary-fixed transition-colors">Clear All</button>
+<button class="bg-primary text-on-primary px-8 py-2 rounded-full font-bold shadow-lg transition-transform active:scale-95">Generate Report</button>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#dedbc2",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#dee7bf",
+                        "inverse-on-surface": "#f5f1d8",
+                        "on-secondary-fixed": "#171e06",
+                        "surface-tint": "#586330",
+                        "surface-container-low": "#f8f4db",
+                        "on-secondary-fixed-variant": "#424a2d",
+                        "inverse-surface": "#323120",
+                        "tertiary-fixed-dim": "#f0bd8b",
+                        "surface": "#fefae0",
+                        "primary-container": "#606c38",
+                        "on-surface": "#1d1c0d",
+                        "tertiary-container": "#875f35",
+                        "on-error": "#ffffff",
+                        "outline-variant": "#c7c8b9",
+                        "on-tertiary-fixed": "#2c1600",
+                        "on-background": "#1d1c0d",
+                        "surface-container-highest": "#e7e3ca",
+                        "secondary-container": "#dee7bf",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#606848",
+                        "surface-bright": "#fefae0",
+                        "on-tertiary-fixed-variant": "#623f18",
+                        "surface-variant": "#e7e3ca",
+                        "on-primary-fixed-variant": "#404b1b",
+                        "tertiary-fixed": "#ffdcbd",
+                        "tertiary": "#6c471f",
+                        "primary": "#485422",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#bfcd8f",
+                        "secondary-fixed-dim": "#c2cba4",
+                        "surface-container": "#f2efd5",
+                        "surface-container-high": "#ede9cf",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "background": "#fefae0",
+                        "on-tertiary-container": "#ffe1c8",
+                        "outline": "#77786b",
+                        "primary-fixed-dim": "#bfcd8f",
+                        "on-surface-variant": "#46483c",
+                        "on-primary-container": "#dfedac",
+                        "on-primary": "#ffffff",
+                        "secondary": "#5a6242",
+                        "primary-fixed": "#dbe9a9",
+                        "on-primary-fixed": "#171e00",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Be Vietnam Pro"],
+                        "label": ["Be Vietnam Pro"]
+                    }
+                },
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #fefae0;
+            color: #1d1c0d;
+            font-family: 'Be Vietnam Pro', sans-serif;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-screen w-64 bg-[#485422] dark:bg-[#1d1c0d] flex flex-col py-8 z-50">
+<div class="px-8 mb-10">
+<h1 class="text-2xl font-bold tracking-tighter text-[#fefae0] font-headline">Homestead</h1>
+<p class="text-[#fefae0]/60 text-xs font-medium tracking-wide uppercase mt-1">SaaS Dashboard</p>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Dashboard -->
+<a class="text-[#fefae0]/70 hover:text-[#fefae0] px-4 py-3 mx-2 my-1 flex items-center gap-3 transition-colors duration-200 font-['Plus_Jakarta_Sans'] font-medium text-sm tracking-tight group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">dashboard</span>
+<span>Dashboard</span>
+</a>
+<!-- Browse (ACTIVE) -->
+<a class="bg-[#606c38] text-[#fefae0] rounded-full mx-2 my-1 px-4 py-3 font-semibold transition-all flex items-center gap-3 font-['Plus_Jakarta_Sans'] text-sm tracking-tight scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">explore</span>
+<span>Browse</span>
+</a>
+<!-- Search -->
+<a class="text-[#fefae0]/70 hover:text-[#fefae0] px-4 py-3 mx-2 my-1 flex items-center gap-3 transition-colors duration-200 font-['Plus_Jakarta_Sans'] font-medium text-sm tracking-tight group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">search</span>
+<span>Search</span>
+</a>
+<!-- Shortlists -->
+<a class="text-[#fefae0]/70 hover:text-[#fefae0] px-4 py-3 mx-2 my-1 flex items-center gap-3 transition-colors duration-200 font-['Plus_Jakarta_Sans'] font-medium text-sm tracking-tight group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">bookmark</span>
+<span>Shortlists</span>
+</a>
+<!-- Settings -->
+<a class="text-[#fefae0]/70 hover:text-[#fefae0] px-4 py-3 mx-2 my-1 flex items-center gap-3 transition-colors duration-200 font-['Plus_Jakarta_Sans'] font-medium text-sm tracking-tight group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">settings</span>
+<span>Settings</span>
+</a>
+<!-- Profile -->
+<a class="text-[#fefae0]/70 hover:text-[#fefae0] px-4 py-3 mx-2 my-1 flex items-center gap-3 transition-colors duration-200 font-['Plus_Jakarta_Sans'] font-medium text-sm tracking-tight group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">person</span>
+<span>Profile</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<div class="bg-[#606c38]/30 rounded-2xl p-4">
+<p class="text-[#fefae0] text-xs font-semibold mb-2">Investment Credits</p>
+<div class="w-full bg-[#fefae0]/10 h-1.5 rounded-full overflow-hidden">
+<div class="bg-[#fefae0] h-full w-[74%] rounded-full"></div>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-20 bg-[#fefae0]/70 backdrop-blur-xl flex justify-end items-center px-12 gap-6 z-40">
+<div class="mr-auto">
+<h2 class="font-headline font-bold text-2xl text-primary tracking-tight">Browse Properties</h2>
+</div>
+<button class="bg-primary hover:bg-primary-container text-on-primary px-6 py-2.5 rounded-full font-headline font-semibold text-sm transition-all active:scale-95 shadow-lg shadow-primary/20">
+            Quick Add Property
+        </button>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border-2 border-primary/10">
+<img alt="User Profile" data-alt="professional headshot of a smiling man in a business casual attire with warm studio lighting and neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0DWaneCU32W8wCOON4bQy8_tZ27A5I9CSfoBHW1sl23dzYS97p44DuQACXOpvYNeYOmpLIqJv9akBoppzINGx3xIMqTn3Od35l1VnSTz-hAbE_55ZfZ5Nrzi1zdmeWgJFXLGUOZbbqhPEBIUvicKKwZrT821dyiIXLK1g8zjDywcXjZHxi567UPkIPApGSlCia1ibvPqonY7W9QJfvaiJVkeYwEOTvZ2U07Eriws02gSIfTemBEkJjDqJ8YvL2IM8pPJvW_2b4Xc"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 px-12 pb-20 bg-surface-container-low min-h-screen">
+<!-- Filter Tags & Discovery Header -->
+<div class="flex flex-col gap-6 mb-12">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3 overflow-x-auto hide-scrollbar pb-2">
+<button class="px-6 py-2 bg-primary text-on-primary rounded-full font-label text-sm font-semibold whitespace-nowrap">All Properties</button>
+<button class="px-6 py-2 bg-surface-container-highest hover:bg-surface-dim text-on-surface-variant rounded-full font-label text-sm font-medium transition-colors whitespace-nowrap">Single Family</button>
+<button class="px-6 py-2 bg-surface-container-highest hover:bg-surface-dim text-on-surface-variant rounded-full font-label text-sm font-medium transition-colors whitespace-nowrap">Multi-Unit</button>
+<button class="px-6 py-2 bg-surface-container-highest hover:bg-surface-dim text-on-surface-variant rounded-full font-label text-sm font-medium transition-colors whitespace-nowrap">Under $1M</button>
+<button class="px-6 py-2 bg-surface-container-highest hover:bg-surface-dim text-on-surface-variant rounded-full font-label text-sm font-medium transition-colors whitespace-nowrap">Commercial</button>
+<button class="px-6 py-2 bg-surface-container-highest hover:bg-surface-dim text-on-surface-variant rounded-full font-label text-sm font-medium transition-colors whitespace-nowrap">Fixer Upper</button>
+</div>
+<button class="flex items-center gap-2 bg-tertiary-container text-on-tertiary-container px-6 py-3 rounded-full font-headline font-bold text-sm shadow-xl shadow-tertiary-container/20 hover:scale-105 transition-transform active:scale-95 group">
+<span class="material-symbols-outlined text-lg">auto_awesome</span>
+                    Surprise Me
+                </button>
+</div>
+</div>
+<!-- Hero Discovery Feed (Bento Style) -->
+<div class="grid grid-cols-12 gap-6 mb-16">
+<div class="col-span-12 lg:col-span-8 group relative overflow-hidden rounded-xl bg-surface-container-highest h-[500px]">
+<img alt="Modern Luxury Villa" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="luxury modern minimalist villa with expansive glass windows and warm interior lighting during twilight with a swimming pool in front" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVrMB8Y8aizVXLlKLQFDquwSYdd4apDPx7P-T14vKyYQpSnnyn5UyewHBpBDhdwMBbV7fzX1rpck-hG8nT8cxNQXlC9zVeQdrkZzhzq787LU34uEH0wUi9ePIsGLJhdI49uCr-Jo0HVzCSKNambm0kRIp2j2wKlEaETuUoVu3NukvOGLUQMBQK3TBLpl-FUymOJE-ZstZdO5kDg25CE_Zb1v_JqpQ67Y8rpYxV05bXlPHbazKdx9mTiqnBLlxzrH_RKY0BFfvU4u0"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/80 via-transparent to-transparent"></div>
+<div class="absolute top-6 right-6">
+<div class="bg-primary/90 backdrop-blur-md px-4 py-2 rounded-full flex items-center gap-2">
+<span class="material-symbols-outlined text-white text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-white font-headline font-bold text-sm">98% Match</span>
+</div>
+</div>
+<div class="absolute bottom-8 left-8 text-white max-w-lg">
+<span class="bg-tertiary-container/30 backdrop-blur-md text-on-tertiary-container text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-md mb-4 inline-block">Newly Listed</span>
+<h3 class="text-4xl font-headline font-extrabold mb-2 leading-tight">The Glass Pavilion at Crestview</h3>
+<p class="text-white/80 font-body text-lg mb-6">Experience architectural mastery in the heart of the Pacific Northwest. High-yield rental potential with existing luxury contracts.</p>
+<div class="flex items-center gap-8">
+<div>
+<p class="text-white/60 text-xs font-semibold uppercase">Price</p>
+<p class="text-2xl font-bold font-headline">$2,450,000</p>
+</div>
+<div>
+<p class="text-white/60 text-xs font-semibold uppercase">Expected ROI</p>
+<p class="text-2xl font-bold font-headline">8.2%</p>
+</div>
+<button class="ml-auto bg-surface text-primary p-4 rounded-full hover:bg-primary-container hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-6">
+<div class="flex-1 bg-tertiary-container rounded-xl p-8 relative overflow-hidden group">
+<div class="relative z-10">
+<h4 class="text-on-tertiary-container font-headline font-extrabold text-2xl mb-2">Market Insights</h4>
+<p class="text-on-tertiary-container/80 text-sm mb-6 leading-relaxed">Property values in quiet neighborhoods have risen 12% in the last quarter.</p>
+<button class="text-on-tertiary-container font-bold text-xs uppercase tracking-widest border-b-2 border-on-tertiary-container/30 pb-1 flex items-center gap-2 group">
+                            Read Full Report
+                            <span class="material-symbols-outlined text-xs group-hover:translate-x-1 transition-transform">north_east</span>
+</button>
+</div>
+<div class="absolute -right-10 -bottom-10 opacity-10 scale-150 rotate-12">
+<span class="material-symbols-outlined text-[12rem]">analytics</span>
+</div>
+</div>
+<div class="flex-1 bg-surface-container-highest rounded-xl p-8 border border-outline-variant/10 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">notifications_active</span>
+</div>
+<span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-1 rounded">HOT AREA</span>
+</div>
+<h4 class="font-headline font-bold text-lg mb-1">Price Alerts</h4>
+<p class="text-on-surface-variant text-sm">3 properties in your shortlist just had price reductions.</p>
+</div>
+<button class="w-full py-3 bg-primary text-on-primary rounded-xl font-headline font-bold text-sm">View Drops</button>
+</div>
+</div>
+</div>
+<!-- Curated Carousel: High-Yield Opportunities -->
+<section class="mb-16">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="font-headline font-extrabold text-3xl tracking-tight">High-Yield ROI Opportunities</h3>
+<p class="text-on-surface-variant text-sm mt-1">Properties optimized for maximum portfolio growth.</p>
+</div>
+<div class="flex gap-2">
+<button class="p-3 rounded-full bg-surface-container-highest text-primary hover:bg-surface-dim transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="p-3 rounded-full bg-surface-container-highest text-primary hover:bg-surface-dim transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="flex gap-6 overflow-x-auto hide-scrollbar pb-6">
+<!-- Property Card 1 -->
+<div class="min-w-[340px] bg-surface-container rounded-xl overflow-hidden group hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300">
+<div class="h-48 overflow-hidden relative">
+<img alt="Suburban Multi-unit" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="bright modern suburban townhouse with stone facade and manicured lawn under a clear blue sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCf1n3dK-zL32Z6E7dxi5wyL9r5wSveue3Ue6-en8SZjPUkMu0ixXXO35SHjnK4l0_klVwgEjWMo1CguSNIfgzNk1V62SQMwl1SLcUHSgPTDnayGqMTf5R_ag43gGQ2-Xx8Fr4aFWTXOiNndodflwOYWg47WVufi6ZU5S2Od0jjjwn5OeotaiByOJzjW4AA5aBS_5To9VA2ZeVK8j-EJlweekbAPkavb0JJeSLUh7oISbQr6RuYVWpsXJniKFnAao65qQ1BHJNz3ZM"/>
+<div class="absolute top-4 left-4 bg-surface/90 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-2">
+<span class="text-primary font-bold text-[10px]">94% MATCH</span>
+</div>
+</div>
+<div class="p-6">
+<h5 class="font-headline font-bold text-lg mb-1">Midtown Quadruplex</h5>
+<p class="text-on-surface-variant text-xs mb-4">4 Units • 6,200 sqft • Austin, TX</p>
+<div class="flex items-center justify-between">
+<div>
+<span class="text-xs text-on-surface-variant font-medium block">Price</span>
+<span class="text-xl font-headline font-extrabold">$1,150,000</span>
+</div>
+<div class="text-right">
+<span class="text-xs text-on-surface-variant font-medium block">Est. Yield</span>
+<span class="text-xl font-headline font-extrabold text-primary">9.4%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Property Card 2 -->
+<div class="min-w-[340px] bg-surface-container rounded-xl overflow-hidden group hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300">
+<div class="h-48 overflow-hidden relative">
+<img alt="Lakeside Cabin" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="charming A-frame wooden cabin nestled in dense forest by a mirror-like lake at sunrise with misty atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6qLsplXHyw2IR2xuhQC7bV_wggVDlKatrn5FfATeRdAk7tTRtDCmB45i8UTheKq2Ado1g_qMGHhQfUk-dn5Ndko90Mj_u0Fg4Si1V1csrxVZ1pMhCyHVw2jfx6_9hqEqkDW-2u5pB6Gf77HuwQpumRS-7ftl1F2yDypFiSBBz3NBaRXD0lzgTpNC7M0MFuC0iUsqLrZTRrf6rK59tlyNRX5C1sYgaVANusR58_LKrtvx_aZvLYAcEGa9aui-vgcyQS58NNmpp-WU"/>
+<div class="absolute top-4 left-4 bg-surface/90 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-2">
+<span class="text-primary font-bold text-[10px]">91% MATCH</span>
+</div>
+</div>
+<div class="p-6">
+<h5 class="font-headline font-bold text-lg mb-1">Pinecone Lake Cabin</h5>
+<p class="text-on-surface-variant text-xs mb-4">2 Units • 1,800 sqft • Bend, OR</p>
+<div class="flex items-center justify-between">
+<div>
+<span class="text-xs text-on-surface-variant font-medium block">Price</span>
+<span class="text-xl font-headline font-extrabold">$685,000</span>
+</div>
+<div class="text-right">
+<span class="text-xs text-on-surface-variant font-medium block">Est. Yield</span>
+<span class="text-xl font-headline font-extrabold text-primary">11.2%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Property Card 3 -->
+<div class="min-w-[340px] bg-surface-container rounded-xl overflow-hidden group hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300">
+<div class="h-48 overflow-hidden relative">
+<img alt="Modern Duplex" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="contemporary minimalist white concrete duplex with sharp geometric lines and large black framed windows in a manicured garden" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvie7ocFZKq_munYztyEE83MlrICgAwumbV39Eu3G9GVXM4WFMO7W0n_oAwL0yVVHTcRfbYW55vnlkI8sI24qLWD_Aqfeam8uiyCtFLHRoQo8Izj2GuGyQ9zPWuQJ0T3M9FZyuiKUChvsllh160KHPd1pTahrVT60XDNAnCl84Y9iGVyWijMDpk49BAsZ_v4KRcHczpOhebPBwnTgHWKhxLpGTt1AFG5Sq_tsq78ZCDoEF7ACi7okuPjitgfgIIfrp8HUBlEDJfus"/>
+<div class="absolute top-4 left-4 bg-surface/90 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-2">
+<span class="text-primary font-bold text-[10px]">89% MATCH</span>
+</div>
+</div>
+<div class="p-6">
+<h5 class="font-headline font-bold text-lg mb-1">Skyline View Duplex</h5>
+<p class="text-on-surface-variant text-xs mb-4">2 Units • 3,400 sqft • Denver, CO</p>
+<div class="flex items-center justify-between">
+<div>
+<span class="text-xs text-on-surface-variant font-medium block">Price</span>
+<span class="text-xl font-headline font-extrabold">$890,000</span>
+</div>
+<div class="text-right">
+<span class="text-xs text-on-surface-variant font-medium block">Est. Yield</span>
+<span class="text-xl font-headline font-extrabold text-primary">7.8%</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- New Section: Quiet Neighborhoods (Grid Layout) -->
+<section>
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="font-headline font-extrabold text-3xl tracking-tight">Quiet Neighborhoods</h3>
+<p class="text-on-surface-variant text-sm mt-1">Peaceful investments with high long-term appreciation.</p>
+</div>
+<a class="text-primary font-bold text-sm hover:underline" href="#">View All</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Large Card 1 -->
+<div class="bg-surface-container-highest rounded-xl p-6 flex gap-6 group cursor-pointer hover:bg-surface-dim transition-colors">
+<div class="w-40 h-40 rounded-lg overflow-hidden shrink-0">
+<img alt="Cottage" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="traditional quaint red brick cottage with ivy growing on walls and a colorful flower garden in full bloom" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBK2cbkEvd4MC-r7HGUWI6D0x-ni6bciVJLAdPtDqfQOrIj6fHy3pgwmu--OBZcxmbeaUq51mPjKY-NpUdkAKqZa3fck2lMXelcomWZMjDQn7qDDo3NjLtReLqkIolacejtCVvkyBSNOrajTgKolr79kYJpfWbJCpQcXox9L8uVNBwUfjwwetomkdiy0wDJs7kVLQQOXIPX23SObqGV7hGYRnSoBA4sICq4EavLzhWT9jObUDVOQbQy-3cgRjGML94unLLT8IFFaDc"/>
+</div>
+<div class="flex flex-col justify-between py-1">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-sm">verified_user</span>
+<span class="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest">Secure Area</span>
+</div>
+<h5 class="font-headline font-bold text-xl mb-1">Willow Creek Estate</h5>
+<p class="text-on-surface-variant text-sm line-clamp-2">A serene 4-bedroom sanctuary tucked away in a low-traffic cul-de-sac with mature oak trees.</p>
+</div>
+<div class="flex items-center gap-4">
+<span class="bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">92% Match</span>
+<span class="font-headline font-bold text-lg">$1,200,000</span>
+</div>
+</div>
+</div>
+<!-- Large Card 2 -->
+<div class="bg-surface-container-highest rounded-xl p-6 flex gap-6 group cursor-pointer hover:bg-surface-dim transition-colors">
+<div class="w-40 h-40 rounded-lg overflow-hidden shrink-0">
+<img alt="Modern Farmhouse" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="modern farmhouse with white wood siding and black metal roof surrounded by wide open green fields under a soft afternoon sun" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-o6MXyggEo6Xi4GOjYQcUjeubNCHLxivPHqZis08mywc_SmOgx3nRBek8y4ChO6bkym3WWbgWb_DvEPHyl6gwYHUtgRn3MnjrTmeAIWY6dnxh704lgtaimrxQ4qo-KOl8M8_bAbiAl4h5CaMcB0cvXzdtWO-o4ikbSssNYnKpnqlFpLqomTzPQQpg8Oj6KOfPqiW6xRWnF_DfSd6d4AJmxWHMzsCDh4Ce9PRdSSHEqrA_XDYVIA4DQCHZLiSjoH4C1eMgBKf-Crk"/>
+</div>
+<div class="flex flex-col justify-between py-1">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-sm">park</span>
+<span class="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest">Near Parks</span>
+</div>
+<h5 class="font-headline font-bold text-xl mb-1">Maple Leaf Manor</h5>
+<p class="text-on-surface-variant text-sm line-clamp-2">Spacious living in a pedestrian-friendly district. Perfect for families looking for longevity.</p>
+</div>
+<div class="flex items-center gap-4">
+<span class="bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">87% Match</span>
+<span class="font-headline font-bold text-lg">$945,000</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Action Button - Contextually hidden if not matching specific tasks, but here it's "Search" context -->
+<!-- Suppressed based on "Relevance Check" logic as this is a Browse screen with focused feed -->
+</body></html>
