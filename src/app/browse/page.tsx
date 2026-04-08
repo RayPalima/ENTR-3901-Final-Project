@@ -12,6 +12,7 @@ import {
   ChevronRight,
   Search,
 } from "lucide-react";
+import Link from "next/link";
 import { useAuth } from "@/context/auth-context";
 import { useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
@@ -119,6 +120,9 @@ type SearchProperty = {
   sqft: string;
   insight: string;
   image?: string;
+  zestimate?: string;
+  listingUrl?: string;
+  undervaluePct?: number;
 };
 
 type ListingsResponse = {
@@ -127,6 +131,8 @@ type ListingsResponse = {
   note?: string;
   error?: string;
 };
+
+type ListingMode = "top" | "underrated";
 
 const containerVariants = {
   hidden: {},
@@ -144,6 +150,23 @@ const cardVariants = {
   },
 };
 
+function propertyDetailsHref(property: SearchProperty): string {
+  const params = new URLSearchParams({
+    name: property.name,
+    price: property.price,
+    location: property.location,
+    badge: property.badge,
+    beds: String(property.beds),
+    baths: String(property.baths),
+    sqft: property.sqft,
+    insight: property.insight,
+  });
+  if (property.image) params.set("image", property.image);
+  if (property.zestimate) params.set("zestimate", property.zestimate);
+  if (property.listingUrl) params.set("listingUrl", property.listingUrl);
+  return `/property/${encodeURIComponent(property.id)}?${params.toString()}`;
+}
+
 function PropertyCard({
   property,
   featured = false,
@@ -151,6 +174,7 @@ function PropertyCard({
   property: SearchProperty;
   featured?: boolean;
 }) {
+  const [imageFailed, setImageFailed] = useState(false);
   const isBadgeMatch = property.badge.includes("%");
 
   return (
@@ -165,11 +189,12 @@ function PropertyCard({
           featured ? "min-h-[280px]" : "h-52"
         }`}
       >
-        {property.image ? (
+        {property.image && !imageFailed ? (
           <img
             src={property.image}
             alt={property.name}
             className="absolute inset-0 w-full h-full object-cover"
+            onError={() => setImageFailed(true)}
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
@@ -225,9 +250,12 @@ function PropertyCard({
           </p>
         </div>
 
-        <button className="mt-2 flex items-center gap-2 text-sm font-bold text-primary group-hover:gap-3 transition-all">
+        <Link
+          href={propertyDetailsHref(property)}
+          className="mt-2 flex items-center gap-2 text-sm font-bold text-primary group-hover:gap-3 transition-all"
+        >
           View Property <ChevronRight size={16} />
-        </button>
+        </Link>
       </div>
     </motion.div>
   );
@@ -242,12 +270,15 @@ export default function BrowsePage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [parsedParams, setParsedParams] = useState<Record<string, unknown> | null>(null);
   const [noteMessage, setNoteMessage] = useState<string | null>(null);
+  const [featuredNoteMessage, setFeaturedNoteMessage] = useState<string | null>(null);
+  const [listingMode, setListingMode] = useState<ListingMode>("underrated");
   const { user } = useAuth();
   const [didAutoRun, setDidAutoRun] = useState(false);
   const [preferredLocation, setPreferredLocation] = useState<string | null>(null);
   const [featuredProperties, setFeaturedProperties] = useState<SearchProperty[]>(fallbackProperties);
   const [featuredLoading, setFeaturedLoading] = useState(false);
   const [didFetchFeatured, setDidFetchFeatured] = useState(false);
+  const [featuredUsedTopFallback, setFeaturedUsedTopFallback] = useState(false);
 
   const [guestLocation, setGuestLocation] = useState("");
   const [showGuestLocationDropdown, setShowGuestLocationDropdown] = useState(false);
@@ -351,7 +382,7 @@ export default function BrowsePage() {
       const state = firstNonEmptyString(addrObj?.state, record.addressState);
 
       const statusLabel = firstNonEmptyString(record.status, record.statusText);
-      const badge = statusLabel
+      let badge = statusLabel
         ? statusLabel.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
         : "Live Listing";
 
@@ -367,11 +398,23 @@ export default function BrowsePage() {
         record.imgSrc,
         record.thumbnailUrl,
       );
+      const listPrice = toNumber(record.price ?? record.unformattedPrice);
+      const zestimate = toNumber(record.zestimate);
+      const undervaluePct =
+        listPrice && zestimate && zestimate > listPrice
+          ? ((zestimate - listPrice) / zestimate) * 100
+          : undefined;
+      if (undervaluePct) {
+        badge = `${Math.round(undervaluePct)}% Below Market Value`;
+      }
 
       mapped.push({
         id,
         name: formattedType ? `${formattedType} — ${street}` : street,
         price: toPrice(record.price ?? record.unformattedPrice, record.currency),
+        zestimate: zestimate
+          ? toPrice(zestimate, record.currency)
+          : undefined,
         location: [city, state].filter(Boolean).join(", ") || street,
         badge,
         beds: toNumber(record.beds) ?? 0,
@@ -379,10 +422,40 @@ export default function BrowsePage() {
         sqft: String(toNumber(record.area) ?? "N/A"),
         insight: "Fetched from live Zillow listings in your preferred area.",
         image: imageUrl,
+        listingUrl: firstNonEmptyString(record.url),
+        undervaluePct,
       });
     }
 
-    return mapped.slice(0, 5);
+    return mapped;
+  }
+
+  function pickTopUndervalued(items: SearchProperty[], limit = 5): SearchProperty[] {
+    return items
+      .filter((item) => typeof item.undervaluePct === "number" && item.undervaluePct > 0)
+      .sort((a, b) => (b.undervaluePct ?? 0) - (a.undervaluePct ?? 0))
+      .slice(0, limit);
+  }
+
+  function hasUndervaluedItems(items: SearchProperty[]): boolean {
+    return items.some(
+      (item) => typeof item.undervaluePct === "number" && item.undervaluePct > 0,
+    );
+  }
+
+  function selectListingsForMode(
+    items: SearchProperty[],
+    mode: ListingMode,
+    limit = 5,
+  ): { items: SearchProperty[]; usedTopFallback: boolean } {
+    if (mode === "top") {
+      return { items: items.slice(0, limit), usedTopFallback: false };
+    }
+    const undervalued = pickTopUndervalued(items, limit);
+    if (undervalued.length > 0) {
+      return { items: undervalued, usedTopFallback: false };
+    }
+    return { items: items.slice(0, limit), usedTopFallback: true };
   }
 
   async function onSearch() {
@@ -418,8 +491,12 @@ export default function BrowsePage() {
       setNoteMessage(data.note ?? null);
 
       const parsed = parseListingItems(data.listings);
-      if (parsed.length > 0) {
-        setProperties(parsed);
+      const selected = selectListingsForMode(parsed, listingMode, 5);
+      if (selected.items.length > 0) {
+        setProperties(selected.items);
+        if (listingMode === "underrated" && selected.usedTopFallback) {
+          setNoteMessage("No underrated listings found, displaying top results instead.");
+        }
       } else if (data.listings != null) {
         setErrorMessage(
           "No listings matched your search. Add a location to your search (city, state, or ZIP). Example: “2 bedroom house in Vancouver, BC”.",
@@ -470,14 +547,21 @@ export default function BrowsePage() {
   const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
   useEffect(() => {
+    setDidFetchFeatured(false);
+  }, [listingMode, preferredLocation, user]);
+
+  useEffect(() => {
     if (didFetchFeatured || !preferredLocation || !user) return;
     setDidFetchFeatured(true);
+    setFeaturedUsedTopFallback(false);
+    const cacheTable =
+      listingMode === "underrated" ? "underrated_listings" : "featured_listings";
 
     const loadFeatured = async () => {
       setFeaturedLoading(true);
       try {
         const { data: row } = await supabase
-          .from("featured_listings")
+          .from(cacheTable)
           .select("location, fetched_at, items")
           .eq("user_id", user.id)
           .maybeSingle();
@@ -491,6 +575,16 @@ export default function BrowsePage() {
             items.length > 0
           ) {
             setFeaturedProperties(items);
+            const usedFallback =
+              listingMode === "underrated" && !hasUndervaluedItems(items);
+            setFeaturedUsedTopFallback(usedFallback);
+            if (usedFallback) {
+              setFeaturedNoteMessage(
+                "No underrated listings found, displaying top results instead.",
+              );
+            } else {
+              setFeaturedNoteMessage(null);
+            }
             return;
           }
         }
@@ -506,21 +600,30 @@ export default function BrowsePage() {
         if (data.listings == null) return;
 
         const parsed = parseListingItems(data.listings);
-        const top5 = parsed.slice(0, 5);
-        if (top5.length > 0) {
-          setFeaturedProperties(top5);
+        const selected = selectListingsForMode(parsed, listingMode, 5);
+        const featured = selected.items;
+        if (featured.length > 0) {
+          setFeaturedProperties(featured);
+          setFeaturedUsedTopFallback(selected.usedTopFallback);
 
           await supabase
-            .from("featured_listings")
+            .from(cacheTable)
             .upsert(
               {
                 user_id: user.id,
                 location: preferredLocation,
                 fetched_at: new Date().toISOString(),
-                items: top5,
+                items: featured,
               },
               { onConflict: "user_id" },
             );
+          if (selected.usedTopFallback) {
+            setFeaturedNoteMessage(
+              "No underrated listings found, displaying top results instead.",
+            );
+          } else {
+            setFeaturedNoteMessage(null);
+          }
         }
       } catch (err) {
         console.warn("[featured] error:", err);
@@ -530,13 +633,14 @@ export default function BrowsePage() {
     };
 
     void loadFeatured();
-  }, [preferredLocation, didFetchFeatured, user]);
+  }, [preferredLocation, didFetchFeatured, user, listingMode]);
 
   useEffect(() => {
     if (didFetchFeatured || user !== null) return;
     setDidFetchFeatured(true);
+    setFeaturedUsedTopFallback(false);
 
-    const CACHE_KEY = "guest_featured_listings";
+    const CACHE_KEY = `guest_featured_listings_${listingMode}`;
 
     interface GuestCache {
       timestamp: number;
@@ -550,6 +654,16 @@ export default function BrowsePage() {
         const age = Date.now() - cached.timestamp;
         if (age < ONE_DAY_MS && cached.items.length > 0) {
           setFeaturedProperties(cached.items);
+          const usedFallback =
+            listingMode === "underrated" && !hasUndervaluedItems(cached.items);
+          setFeaturedUsedTopFallback(usedFallback);
+          if (usedFallback) {
+            setFeaturedNoteMessage(
+              "No underrated listings found, displaying top results instead.",
+            );
+          } else {
+            setFeaturedNoteMessage(null);
+          }
           return;
         }
       }
@@ -571,13 +685,22 @@ export default function BrowsePage() {
         if (data.listings == null) return;
 
         const parsed = parseListingItems(data.listings);
-        const top5 = parsed.slice(0, 5);
-        if (top5.length > 0) {
-          setFeaturedProperties(top5);
+        const selected = selectListingsForMode(parsed, listingMode, 5);
+        const featured = selected.items;
+        if (featured.length > 0) {
+          setFeaturedProperties(featured);
+          setFeaturedUsedTopFallback(selected.usedTopFallback);
+          if (selected.usedTopFallback) {
+            setFeaturedNoteMessage(
+              "No underrated listings found, displaying top results instead.",
+            );
+          } else {
+            setFeaturedNoteMessage(null);
+          }
           try {
             localStorage.setItem(
               CACHE_KEY,
-              JSON.stringify({ timestamp: Date.now(), items: top5 }),
+              JSON.stringify({ timestamp: Date.now(), items: featured }),
             );
           } catch {
             // localStorage full — non-critical
@@ -591,7 +714,7 @@ export default function BrowsePage() {
     };
 
     void loadGuestFeatured();
-  }, [didFetchFeatured, user]);
+  }, [didFetchFeatured, user, listingMode]);
 
   useEffect(() => {
     if (didAutoRun) return;
@@ -640,6 +763,32 @@ export default function BrowsePage() {
             <Search size={18} />
             {isLoading ? "Searching..." : "Search"}
           </button>
+        </div>
+        <div className="flex justify-center mt-4">
+          <div className="inline-flex rounded-2xl bg-surface-container-highest p-1 editorial-shadow">
+            <button
+              type="button"
+              onClick={() => setListingMode("top")}
+              className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${
+                listingMode === "top"
+                  ? "bg-primary text-on-primary"
+                  : "text-on-surface-variant hover:bg-surface-container-high"
+              }`}
+            >
+              Top Listings
+            </button>
+            <button
+              type="button"
+              onClick={() => setListingMode("underrated")}
+              className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${
+                listingMode === "underrated"
+                  ? "bg-primary text-on-primary"
+                  : "text-on-surface-variant hover:bg-surface-container-high"
+              }`}
+            >
+              Underrated Listings
+            </button>
+          </div>
         </div>
 
         {!user && (
@@ -729,10 +878,23 @@ export default function BrowsePage() {
           <h2 className="font-[family-name:var(--font-headline)] text-3xl font-extrabold text-on-surface mt-1">
             {hasLiveResults
               ? "Top Live Results"
-              : preferredLocation
-                ? `Top 5 Picks in ${preferredLocation}`
-                : "Top 5 Picks in New York City"}
+              : listingMode === "underrated"
+                ? featuredUsedTopFallback
+                  ? preferredLocation
+                    ? `Top 5 Listings in ${preferredLocation}`
+                    : "Top 5 Listings in New York City"
+                  : preferredLocation
+                    ? `Top 5 Undervalued Properties in ${preferredLocation}`
+                    : "Top 5 Undervalued Properties in New York City"
+                : preferredLocation
+                  ? `Top 5 Listings in ${preferredLocation}`
+                  : "Top 5 Listings in New York City"}
           </h2>
+          {featuredNoteMessage && !hasLiveResults && (
+            <p className="text-sm text-on-surface-variant mt-1">
+              {featuredNoteMessage}
+            </p>
+          )}
           {!hasLiveResults && !featuredLoading && featuredProperties !== fallbackProperties && (
             <p className="text-sm text-on-surface-variant mt-1">
               Refreshed daily from live Zillow listings.
@@ -797,9 +959,9 @@ export default function BrowsePage() {
             </p>
           </div>
           <div className="flex items-center gap-4 shrink-0">
-            <button className="bg-on-tertiary-container text-tertiary-container rounded-full px-8 py-3.5 font-bold text-sm flex items-center gap-2 transition-transform active:scale-95">
+            <Link href="/signup" className="bg-on-tertiary-container text-tertiary-container rounded-full px-8 py-3.5 font-bold text-sm flex items-center gap-2 transition-transform active:scale-95">
               Get Started <ArrowRight size={16} />
-            </button>
+            </Link>
             <button className="text-on-tertiary-container font-bold text-sm flex items-center gap-2 hover:gap-3 transition-all">
               Learn more <ChevronRight size={16} />
             </button>
