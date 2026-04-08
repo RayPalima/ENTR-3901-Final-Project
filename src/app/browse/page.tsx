@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Sparkles,
@@ -12,6 +12,10 @@ import {
   ChevronRight,
   Search,
 } from "lucide-react";
+import Link from "next/link";
+import { useAuth } from "@/context/auth-context";
+import { useSearchParams } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 
 const suggestions = [
   "Quiet cottage near water",
@@ -19,12 +23,35 @@ const suggestions = [
   "Sunny terrace garden",
 ];
 
-const properties = [
+const PREFERRED_LOCATIONS = [
+  "Toronto, ON",
+  "Montréal, QC",
+  "Vancouver, BC",
+  "Calgary, AB",
+  "Edmonton, AB",
+  "Ottawa, ON",
+  "Winnipeg, MB",
+  "Québec City, QC",
+  "Hamilton, ON",
+  "Kitchener–Waterloo, ON",
+  "New York, NY",
+  "Los Angeles, CA",
+  "Chicago, IL",
+  "Houston, TX",
+  "Phoenix, AZ",
+  "Philadelphia, PA",
+  "San Antonio, TX",
+  "San Diego, CA",
+  "Dallas, TX",
+  "San Jose, CA",
+];
+
+const fallbackProperties: SearchProperty[] = [
   {
+    id: "fallback-1",
     name: "The Obsidian Glasshouse",
     price: "$1,450,000",
     location: "Laurel Canyon, LA",
-    match: "98%",
     badge: "98% Match",
     beds: 4,
     baths: 3,
@@ -33,10 +60,10 @@ const properties = [
       "\"This home's floor-to-ceiling glazing and canyon views align perfectly with your preference for natural light and indoor-outdoor flow.\"",
   },
   {
+    id: "fallback-2",
     name: "Elderberry Cottage",
     price: "$820,000",
     location: "Cotswolds, UK",
-    match: null,
     badge: "Highly Viewed",
     beds: 3,
     baths: 2,
@@ -45,10 +72,10 @@ const properties = [
       "\"A storybook retreat with hand-laid stone walls and wildflower gardens — ideal for the quiet, rural life you described.\"",
   },
   {
+    id: "fallback-3",
     name: "Skyline Loft 4B",
     price: "$1,100,000",
     location: "Austin, TX",
-    match: null,
     badge: "Investment Pick",
     beds: 2,
     baths: 2,
@@ -57,30 +84,55 @@ const properties = [
       "\"Strong rental yield in a booming market. The open-plan kitchen suits your entertaining style.\"",
   },
   {
-    name: "Blue Pine Retreat",
-    price: "$950,000",
-    location: "Tahoe, CA",
-    match: null,
-    badge: "Quiet Oasis",
+    id: "fallback-4",
+    name: "Harborview Townhome",
+    price: "$975,000",
+    location: "San Diego, CA",
+    badge: "Waterfront",
     beds: 3,
     baths: 2,
     sqft: "2,100",
     insight:
-      "\"Nestled among blue pines with lake access — a sanctuary for deep work and weekend escapes.\"",
+      "\"Steps from the marina with rooftop ocean views — a coastal lifestyle at a competitive price point.\"",
   },
   {
-    name: "Saguaro Sands",
-    price: "$1,250,000",
-    location: "Sedona, AZ",
-    match: null,
-    badge: "Unique Find",
+    id: "fallback-5",
+    name: "Maple Ridge Colonial",
+    price: "$680,000",
+    location: "Toronto, ON",
+    badge: "Family Friendly",
     beds: 4,
     baths: 3,
-    sqft: "2,800",
+    sqft: "2,400",
     insight:
-      "\"Desert modernism with red-rock panoramas. The private courtyard matches your love of stargazing.\"",
+      "\"A classic family home in a top-rated school district with a spacious backyard and finished basement.\"",
   },
 ];
+
+type SearchProperty = {
+  id: string;
+  name: string;
+  price: string;
+  location: string;
+  badge: string;
+  beds: number;
+  baths: number;
+  sqft: string;
+  insight: string;
+  image?: string;
+  zestimate?: string;
+  listingUrl?: string;
+  undervaluePct?: number;
+};
+
+type ListingsResponse = {
+  parsedParams?: Record<string, unknown>;
+  listings?: unknown;
+  note?: string;
+  error?: string;
+};
+
+type ListingMode = "top" | "underrated";
 
 const containerVariants = {
   hidden: {},
@@ -98,13 +150,31 @@ const cardVariants = {
   },
 };
 
+function propertyDetailsHref(property: SearchProperty): string {
+  const params = new URLSearchParams({
+    name: property.name,
+    price: property.price,
+    location: property.location,
+    badge: property.badge,
+    beds: String(property.beds),
+    baths: String(property.baths),
+    sqft: property.sqft,
+    insight: property.insight,
+  });
+  if (property.image) params.set("image", property.image);
+  if (property.zestimate) params.set("zestimate", property.zestimate);
+  if (property.listingUrl) params.set("listingUrl", property.listingUrl);
+  return `/property/${encodeURIComponent(property.id)}?${params.toString()}`;
+}
+
 function PropertyCard({
   property,
   featured = false,
 }: {
-  property: (typeof properties)[0];
+  property: SearchProperty;
   featured?: boolean;
 }) {
+  const [imageFailed, setImageFailed] = useState(false);
   const isBadgeMatch = property.badge.includes("%");
 
   return (
@@ -115,15 +185,24 @@ function PropertyCard({
       }`}
     >
       <div
-        className={`relative bg-surface-container-highest ${
+        className={`relative bg-surface-container-highest overflow-hidden ${
           featured ? "min-h-[280px]" : "h-52"
         }`}
       >
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center">
-            <MapPin className="text-primary-container" size={28} />
+        {property.image && !imageFailed ? (
+          <img
+            src={property.image}
+            alt={property.name}
+            className="absolute inset-0 w-full h-full object-cover"
+            onError={() => setImageFailed(true)}
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center">
+              <MapPin className="text-primary-container" size={28} />
+            </div>
           </div>
-        </div>
+        )}
         <span
           className={`absolute top-4 left-4 text-xs font-bold px-3 py-1.5 rounded-full ${
             isBadgeMatch
@@ -171,16 +250,479 @@ function PropertyCard({
           </p>
         </div>
 
-        <button className="mt-2 flex items-center gap-2 text-sm font-bold text-primary group-hover:gap-3 transition-all">
+        <Link
+          href={propertyDetailsHref(property)}
+          className="mt-2 flex items-center gap-2 text-sm font-bold text-primary group-hover:gap-3 transition-all"
+        >
           View Property <ChevronRight size={16} />
-        </button>
+        </Link>
       </div>
     </motion.div>
   );
 }
 
 export default function BrowsePage() {
-  const [query, setQuery] = useState("");
+  const searchParams = useSearchParams();
+  const initialQuery = searchParams.get("q") ?? "";
+  const [query, setQuery] = useState(initialQuery);
+  const [properties, setProperties] = useState<SearchProperty[]>(fallbackProperties);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [parsedParams, setParsedParams] = useState<Record<string, unknown> | null>(null);
+  const [noteMessage, setNoteMessage] = useState<string | null>(null);
+  const [featuredNoteMessage, setFeaturedNoteMessage] = useState<string | null>(null);
+  const [listingMode, setListingMode] = useState<ListingMode>("underrated");
+  const { user } = useAuth();
+  const [didAutoRun, setDidAutoRun] = useState(false);
+  const [preferredLocation, setPreferredLocation] = useState<string | null>(null);
+  const [featuredProperties, setFeaturedProperties] = useState<SearchProperty[]>(fallbackProperties);
+  const [featuredLoading, setFeaturedLoading] = useState(false);
+  const [didFetchFeatured, setDidFetchFeatured] = useState(false);
+  const [featuredUsedTopFallback, setFeaturedUsedTopFallback] = useState(false);
+
+  const [guestLocation, setGuestLocation] = useState("");
+  const [showGuestLocationDropdown, setShowGuestLocationDropdown] = useState(false);
+  const guestLocationRef = useRef<HTMLDivElement | null>(null);
+
+  const matchingGuestLocations = guestLocation
+    ? PREFERRED_LOCATIONS.filter((loc) =>
+        loc.toLowerCase().includes(guestLocation.toLowerCase()),
+      )
+    : PREFERRED_LOCATIONS;
+
+  useEffect(() => {
+    if (!showGuestLocationDropdown) return;
+    const onMouseDown = (e: MouseEvent) => {
+      if (
+        guestLocationRef.current &&
+        e.target instanceof Node &&
+        !guestLocationRef.current.contains(e.target)
+      ) {
+        setShowGuestLocationDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", onMouseDown);
+    return () => document.removeEventListener("mousedown", onMouseDown);
+  }, [showGuestLocationDropdown]);
+
+  const hasLiveResults = useMemo(
+    () => properties !== fallbackProperties,
+    [properties],
+  );
+
+  function firstNonEmptyString(...values: unknown[]): string | undefined {
+    for (const value of values) {
+      if (typeof value === "string" && value.trim().length > 0) {
+        return value.trim();
+      }
+    }
+    return undefined;
+  }
+
+  function toNumber(value: unknown): number | undefined {
+    if (typeof value === "number" && Number.isFinite(value)) return value;
+    if (typeof value === "string") {
+      const n = Number(value.replace(/[^\d.]/g, ""));
+      if (Number.isFinite(n)) return n;
+    }
+    return undefined;
+  }
+
+  function toPrice(value: unknown, currencyHint?: unknown): string {
+    const n = toNumber(value);
+    if (!n) return "Price unavailable";
+    const raw = typeof currencyHint === "string" ? currencyHint.trim().toUpperCase() : "";
+    const isCAD = raw === "C$" || raw === "CAD";
+    const code = isCAD ? "CAD" : "USD";
+    const locale = isCAD ? "en-CA" : "en-US";
+    return n.toLocaleString(locale, { style: "currency", currency: code, maximumFractionDigits: 0 });
+  }
+
+  function coerceToString(...values: unknown[]): string | undefined {
+    for (const v of values) {
+      if (typeof v === "string" && v.trim().length > 0) return v.trim();
+      if (typeof v === "number" && Number.isFinite(v)) return String(v);
+    }
+    return undefined;
+  }
+
+  function extractListArray(payload: unknown): unknown[] {
+    if (Array.isArray(payload)) return payload;
+    if (!payload || typeof payload !== "object") return [];
+    const obj = payload as Record<string, unknown>;
+    if (Array.isArray(obj.properties)) return obj.properties;
+    if (Array.isArray(obj.data)) return obj.data;
+    if (Array.isArray(obj.results)) return obj.results;
+    if (Array.isArray(obj.listings)) return obj.listings;
+    return [];
+  }
+
+  function parseListingItems(payload: unknown): SearchProperty[] {
+    const rawItems = extractListArray(payload);
+
+    const mapped: SearchProperty[] = [];
+    for (const item of rawItems) {
+      if (!item || typeof item !== "object") continue;
+      const record = item as Record<string, unknown>;
+
+      const id = coerceToString(record.zpid, record.id, record.providerListingId);
+
+      const addrObj = record.address && typeof record.address === "object"
+        ? (record.address as Record<string, unknown>)
+        : null;
+      const street = firstNonEmptyString(
+        record.addressRaw,
+        addrObj?.street,
+        record.streetAddress,
+        record.addressStreet,
+      );
+      if (!id || !street) continue;
+
+      const city = firstNonEmptyString(addrObj?.city, record.addressCity);
+      const state = firstNonEmptyString(addrObj?.state, record.addressState);
+
+      const statusLabel = firstNonEmptyString(record.status, record.statusText);
+      let badge = statusLabel
+        ? statusLabel.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+        : "Live Listing";
+
+      const homeType = firstNonEmptyString(record.homeType);
+      const formattedType = homeType
+        ? homeType.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+        : null;
+
+      const photos = Array.isArray(record.photos) ? record.photos : [];
+      const imageUrl = firstNonEmptyString(
+        record.image,
+        photos[0],
+        record.imgSrc,
+        record.thumbnailUrl,
+      );
+      const listPrice = toNumber(record.price ?? record.unformattedPrice);
+      const zestimate = toNumber(record.zestimate);
+      const undervaluePct =
+        listPrice && zestimate && zestimate > listPrice
+          ? ((zestimate - listPrice) / zestimate) * 100
+          : undefined;
+      if (undervaluePct) {
+        badge = `${Math.round(undervaluePct)}% Below Market Value`;
+      }
+
+      mapped.push({
+        id,
+        name: formattedType ? `${formattedType} — ${street}` : street,
+        price: toPrice(record.price ?? record.unformattedPrice, record.currency),
+        zestimate: zestimate
+          ? toPrice(zestimate, record.currency)
+          : undefined,
+        location: [city, state].filter(Boolean).join(", ") || street,
+        badge,
+        beds: toNumber(record.beds) ?? 0,
+        baths: toNumber(record.baths) ?? 0,
+        sqft: String(toNumber(record.area) ?? "N/A"),
+        insight: "Fetched from live Zillow listings in your preferred area.",
+        image: imageUrl,
+        listingUrl: firstNonEmptyString(record.url),
+        undervaluePct,
+      });
+    }
+
+    return mapped;
+  }
+
+  function pickTopUndervalued(items: SearchProperty[], limit = 5): SearchProperty[] {
+    return items
+      .filter((item) => typeof item.undervaluePct === "number" && item.undervaluePct > 0)
+      .sort((a, b) => (b.undervaluePct ?? 0) - (a.undervaluePct ?? 0))
+      .slice(0, limit);
+  }
+
+  function hasUndervaluedItems(items: SearchProperty[]): boolean {
+    return items.some(
+      (item) => typeof item.undervaluePct === "number" && item.undervaluePct > 0,
+    );
+  }
+
+  function selectListingsForMode(
+    items: SearchProperty[],
+    mode: ListingMode,
+    limit = 5,
+  ): { items: SearchProperty[]; usedTopFallback: boolean } {
+    if (mode === "top") {
+      return { items: items.slice(0, limit), usedTopFallback: false };
+    }
+    const undervalued = pickTopUndervalued(items, limit);
+    if (undervalued.length > 0) {
+      return { items: undervalued, usedTopFallback: false };
+    }
+    return { items: items.slice(0, limit), usedTopFallback: true };
+  }
+
+  async function onSearch() {
+    const trimmed = query.trim();
+    if (!trimmed) return;
+
+    if (!user && !PREFERRED_LOCATIONS.includes(guestLocation)) {
+      setErrorMessage("Please select a location from the dropdown before searching.");
+      return;
+    }
+
+    setIsLoading(true);
+    setErrorMessage(null);
+    setNoteMessage(null);
+
+    try {
+      const fallbackKeyword = user ? preferredLocation : guestLocation;
+
+      const response = await fetch("/api/listings/search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ query: trimmed, fallbackKeyword }),
+      });
+
+      const data = (await response.json()) as ListingsResponse;
+      if (!response.ok) {
+        throw new Error(data.error ?? "Search failed.");
+      }
+
+      setParsedParams(data.parsedParams ?? null);
+      setNoteMessage(data.note ?? null);
+
+      const parsed = parseListingItems(data.listings);
+      const selected = selectListingsForMode(parsed, listingMode, 5);
+      if (selected.items.length > 0) {
+        setProperties(selected.items);
+        if (listingMode === "underrated" && selected.usedTopFallback) {
+          setNoteMessage("No underrated listings found, displaying top results instead.");
+        }
+      } else if (data.listings != null) {
+        setErrorMessage(
+          "No listings matched your search. Add a location to your search (city, state, or ZIP). Example: “2 bedroom house in Vancouver, BC”.",
+        );
+        setProperties(fallbackProperties);
+      } else {
+        setProperties(fallbackProperties);
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Search failed.";
+      setErrorMessage(message);
+      setProperties(fallbackProperties);
+      setParsedParams(null);
+      setNoteMessage(null);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    // If logged in, fetch profile.preferred_location once
+    const fetchPreferredLocation = async () => {
+      if (!user) {
+        setPreferredLocation(null);
+        return;
+      }
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("preferred_location")
+        .eq("id", user.id)
+        .maybeSingle();
+      if (error) {
+        // Silent failure; we still let the user search, they'll just see the "add a location" tip if missing
+        setPreferredLocation(null);
+        return;
+      }
+      setPreferredLocation(
+        data?.preferred_location && typeof data.preferred_location === "string"
+          ? data.preferred_location
+          : null,
+      );
+    };
+
+    void fetchPreferredLocation();
+  }, [user]);
+
+  const GUEST_LOCATION = "New York, NY";
+  const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+
+  useEffect(() => {
+    setDidFetchFeatured(false);
+  }, [listingMode, preferredLocation, user]);
+
+  useEffect(() => {
+    if (didFetchFeatured || !preferredLocation || !user) return;
+    setDidFetchFeatured(true);
+    setFeaturedUsedTopFallback(false);
+    const cacheTable =
+      listingMode === "underrated" ? "underrated_listings" : "featured_listings";
+
+    const loadFeatured = async () => {
+      setFeaturedLoading(true);
+      try {
+        const { data: row } = await supabase
+          .from(cacheTable)
+          .select("location, fetched_at, items")
+          .eq("user_id", user.id)
+          .maybeSingle();
+
+        if (row) {
+          const age = Date.now() - new Date(row.fetched_at as string).getTime();
+          const items = (row.items ?? []) as SearchProperty[];
+          if (
+            age < ONE_DAY_MS &&
+            row.location === preferredLocation &&
+            items.length > 0
+          ) {
+            setFeaturedProperties(items);
+            const usedFallback =
+              listingMode === "underrated" && !hasUndervaluedItems(items);
+            setFeaturedUsedTopFallback(usedFallback);
+            if (usedFallback) {
+              setFeaturedNoteMessage(
+                "No underrated listings found, displaying top results instead.",
+              );
+            } else {
+              setFeaturedNoteMessage(null);
+            }
+            return;
+          }
+        }
+
+        const res = await fetch("/api/listings/featured", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ keyword: preferredLocation }),
+        });
+        if (!res.ok) return;
+
+        const data = (await res.json()) as { listings?: unknown; note?: string };
+        if (data.listings == null) return;
+
+        const parsed = parseListingItems(data.listings);
+        const selected = selectListingsForMode(parsed, listingMode, 5);
+        const featured = selected.items;
+        if (featured.length > 0) {
+          setFeaturedProperties(featured);
+          setFeaturedUsedTopFallback(selected.usedTopFallback);
+
+          await supabase
+            .from(cacheTable)
+            .upsert(
+              {
+                user_id: user.id,
+                location: preferredLocation,
+                fetched_at: new Date().toISOString(),
+                items: featured,
+              },
+              { onConflict: "user_id" },
+            );
+          if (selected.usedTopFallback) {
+            setFeaturedNoteMessage(
+              "No underrated listings found, displaying top results instead.",
+            );
+          } else {
+            setFeaturedNoteMessage(null);
+          }
+        }
+      } catch (err) {
+        console.warn("[featured] error:", err);
+      } finally {
+        setFeaturedLoading(false);
+      }
+    };
+
+    void loadFeatured();
+  }, [preferredLocation, didFetchFeatured, user, listingMode]);
+
+  useEffect(() => {
+    if (didFetchFeatured || user !== null) return;
+    setDidFetchFeatured(true);
+    setFeaturedUsedTopFallback(false);
+
+    const CACHE_KEY = `guest_featured_listings_${listingMode}`;
+
+    interface GuestCache {
+      timestamp: number;
+      items: SearchProperty[];
+    }
+
+    try {
+      const raw = localStorage.getItem(CACHE_KEY);
+      if (raw) {
+        const cached = JSON.parse(raw) as GuestCache;
+        const age = Date.now() - cached.timestamp;
+        if (age < ONE_DAY_MS && cached.items.length > 0) {
+          setFeaturedProperties(cached.items);
+          const usedFallback =
+            listingMode === "underrated" && !hasUndervaluedItems(cached.items);
+          setFeaturedUsedTopFallback(usedFallback);
+          if (usedFallback) {
+            setFeaturedNoteMessage(
+              "No underrated listings found, displaying top results instead.",
+            );
+          } else {
+            setFeaturedNoteMessage(null);
+          }
+          return;
+        }
+      }
+    } catch {
+      // corrupt cache — continue to fetch
+    }
+
+    const loadGuestFeatured = async () => {
+      setFeaturedLoading(true);
+      try {
+        const res = await fetch("/api/listings/featured", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ keyword: GUEST_LOCATION }),
+        });
+        if (!res.ok) return;
+
+        const data = (await res.json()) as { listings?: unknown; note?: string };
+        if (data.listings == null) return;
+
+        const parsed = parseListingItems(data.listings);
+        const selected = selectListingsForMode(parsed, listingMode, 5);
+        const featured = selected.items;
+        if (featured.length > 0) {
+          setFeaturedProperties(featured);
+          setFeaturedUsedTopFallback(selected.usedTopFallback);
+          if (selected.usedTopFallback) {
+            setFeaturedNoteMessage(
+              "No underrated listings found, displaying top results instead.",
+            );
+          } else {
+            setFeaturedNoteMessage(null);
+          }
+          try {
+            localStorage.setItem(
+              CACHE_KEY,
+              JSON.stringify({ timestamp: Date.now(), items: featured }),
+            );
+          } catch {
+            // localStorage full — non-critical
+          }
+        }
+      } catch (err) {
+        console.warn("[guest featured] error:", err);
+      } finally {
+        setFeaturedLoading(false);
+      }
+    };
+
+    void loadGuestFeatured();
+  }, [didFetchFeatured, user, listingMode]);
+
+  useEffect(() => {
+    if (didAutoRun) return;
+    if (!initialQuery.trim()) return;
+    setDidAutoRun(true);
+    void onSearch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [didAutoRun, initialQuery]);
 
   return (
     <div className="px-6 pb-20">
@@ -207,14 +749,85 @@ export default function BrowsePage() {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") void onSearch();
+            }}
             placeholder="Describe your ideal home..."
             className="flex-1 bg-transparent py-4 px-2 text-on-surface placeholder:text-on-surface-variant/60 outline-none text-base"
           />
-          <button className="bg-primary text-on-primary rounded-2xl px-6 py-3.5 font-bold text-sm flex items-center gap-2 transition-transform active:scale-95 shrink-0">
+          <button
+            onClick={onSearch}
+            disabled={isLoading}
+            className="bg-primary text-on-primary rounded-2xl px-6 py-3.5 font-bold text-sm flex items-center gap-2 transition-transform active:scale-95 shrink-0 disabled:opacity-60"
+          >
             <Search size={18} />
-            Search
+            {isLoading ? "Searching..." : "Search"}
           </button>
         </div>
+        <div className="flex justify-center mt-4">
+          <div className="inline-flex rounded-2xl bg-surface-container-highest p-1 editorial-shadow">
+            <button
+              type="button"
+              onClick={() => setListingMode("top")}
+              className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${
+                listingMode === "top"
+                  ? "bg-primary text-on-primary"
+                  : "text-on-surface-variant hover:bg-surface-container-high"
+              }`}
+            >
+              Top Listings
+            </button>
+            <button
+              type="button"
+              onClick={() => setListingMode("underrated")}
+              className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${
+                listingMode === "underrated"
+                  ? "bg-primary text-on-primary"
+                  : "text-on-surface-variant hover:bg-surface-container-high"
+              }`}
+            >
+              Underrated Listings
+            </button>
+          </div>
+        </div>
+
+        {!user && (
+          <div className="relative max-w-2xl mx-auto mt-4" ref={guestLocationRef}>
+            <div className="bg-surface-container-highest rounded-2xl p-2 flex items-center gap-2 editorial-shadow">
+              <div className="pl-3 text-primary-container">
+                <MapPin size={18} />
+              </div>
+              <input
+                type="text"
+                value={guestLocation}
+                onFocus={() => setShowGuestLocationDropdown(true)}
+                onChange={(e) => {
+                  setGuestLocation(e.target.value);
+                  setShowGuestLocationDropdown(true);
+                }}
+                placeholder="Select a location..."
+                className="flex-1 bg-transparent py-3 px-2 text-on-surface placeholder:text-on-surface-variant/60 outline-none text-sm"
+              />
+            </div>
+            {showGuestLocationDropdown && matchingGuestLocations.length > 0 && (
+              <div className="absolute z-20 mt-2 w-full max-h-44 overflow-y-auto rounded-2xl bg-surface-container-highest border border-outline-variant/40 shadow-lg text-left">
+                {matchingGuestLocations.map((loc) => (
+                  <button
+                    key={loc}
+                    type="button"
+                    onClick={() => {
+                      setGuestLocation(loc);
+                      setShowGuestLocationDropdown(false);
+                    }}
+                    className="w-full px-4 py-2 text-sm text-on-surface hover:bg-surface-container-high transition-colors text-left"
+                  >
+                    {loc}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="flex flex-wrap justify-center gap-3 mt-6">
           {suggestions.map((s) => (
@@ -227,9 +840,30 @@ export default function BrowsePage() {
             </button>
           ))}
         </div>
+
+        {errorMessage && (
+          <div className="mt-6 max-w-2xl mx-auto rounded-2xl bg-surface-container p-4 text-left editorial-shadow">
+            <p className="text-[11px] uppercase tracking-widest font-bold text-primary-container mb-1">
+              Search Tip
+            </p>
+            <p className="text-sm text-on-surface-variant leading-relaxed">
+              {errorMessage}
+            </p>
+          </div>
+        )}
+
+        {noteMessage && (
+          <p className="mt-5 text-sm text-on-surface-variant">{noteMessage}</p>
+        )}
+
+        {parsedParams && (
+          <pre className="mt-5 text-left text-xs bg-surface-container rounded-2xl p-4 overflow-auto">
+            {JSON.stringify(parsedParams, null, 2)}
+          </pre>
+        )}
       </motion.section>
 
-      {/* Top 5 Recommendations */}
+      {/* Top Recommendations */}
       <section className="max-w-6xl mx-auto mb-20">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -239,28 +873,71 @@ export default function BrowsePage() {
           className="mb-8"
         >
           <span className="text-[11px] uppercase tracking-widest font-bold text-tertiary-fixed-dim">
-            Curated Discovery
+            {hasLiveResults ? "Search Results" : "Curated Discovery"}
           </span>
           <h2 className="font-[family-name:var(--font-headline)] text-3xl font-extrabold text-on-surface mt-1">
-            Top 5 for You
+            {hasLiveResults
+              ? "Top Live Results"
+              : listingMode === "underrated"
+                ? featuredUsedTopFallback
+                  ? preferredLocation
+                    ? `Top 5 Listings in ${preferredLocation}`
+                    : "Top 5 Listings in New York City"
+                  : preferredLocation
+                    ? `Top 5 Undervalued Properties in ${preferredLocation}`
+                    : "Top 5 Undervalued Properties in New York City"
+                : preferredLocation
+                  ? `Top 5 Listings in ${preferredLocation}`
+                  : "Top 5 Listings in New York City"}
           </h2>
+          {featuredNoteMessage && !hasLiveResults && (
+            <p className="text-sm text-on-surface-variant mt-1">
+              {featuredNoteMessage}
+            </p>
+          )}
+          {!hasLiveResults && !featuredLoading && featuredProperties !== fallbackProperties && (
+            <p className="text-sm text-on-surface-variant mt-1">
+              Refreshed daily from live Zillow listings.
+            </p>
+          )}
         </motion.div>
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-80px" }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          {properties.map((property, i) => (
-            <PropertyCard
-              key={property.name}
-              property={property}
-              featured={i === 0}
-            />
-          ))}
-        </motion.div>
+        {(() => {
+          if (featuredLoading && !hasLiveResults) {
+            return (
+              <div className="flex items-center justify-center gap-3 py-16 text-on-surface-variant">
+                <span className="animate-spin h-5 w-5 border-2 border-primary border-t-transparent rounded-full" />
+                <span className="text-sm font-medium">Loading listings from {preferredLocation ?? "New York City"}…</span>
+              </div>
+            );
+          }
+
+          const displayItems = hasLiveResults
+            ? properties
+            : featuredProperties.length > 0
+              ? featuredProperties
+              : fallbackProperties;
+
+          const listKey = displayItems.map((p) => p.id).join(",");
+
+          return (
+            <motion.div
+              key={listKey}
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
+              {displayItems.map((property, i) => (
+                <PropertyCard
+                  key={property.id}
+                  property={property}
+                  featured={i === 0}
+                />
+              ))}
+            </motion.div>
+          );
+        })()}
       </section>
 
       {/* CTA Banner */}
@@ -282,9 +959,9 @@ export default function BrowsePage() {
             </p>
           </div>
           <div className="flex items-center gap-4 shrink-0">
-            <button className="bg-on-tertiary-container text-tertiary-container rounded-full px-8 py-3.5 font-bold text-sm flex items-center gap-2 transition-transform active:scale-95">
+            <Link href="/signup" className="bg-on-tertiary-container text-tertiary-container rounded-full px-8 py-3.5 font-bold text-sm flex items-center gap-2 transition-transform active:scale-95">
               Get Started <ArrowRight size={16} />
-            </button>
+            </Link>
             <button className="text-on-tertiary-container font-bold text-sm flex items-center gap-2 hover:gap-3 transition-all">
               Learn more <ChevronRight size={16} />
             </button>

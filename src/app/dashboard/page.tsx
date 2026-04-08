@@ -161,7 +161,7 @@ export default function DashboardPage() {
           Welcome back, {displayName}.
         </h1>
         <p className="text-on-surface-variant text-base mt-2 max-w-xl">
-          {displayEmail} &mdash; Let&apos;s evaluate your next opportunity in the Kensington market.
+          Let&apos;s evaluate your next opportunity in the Kensington market.
         </p>
       </motion.section>
 
