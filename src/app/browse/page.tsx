@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Sparkles,
@@ -19,7 +19,7 @@ const suggestions = [
   "Sunny terrace garden",
 ];
 
-const properties = [
+const fallbackProperties = [
   {
     name: "The Obsidian Glasshouse",
     price: "$1,450,000",
@@ -82,6 +82,24 @@ const properties = [
   },
 ];
 
+type SearchProperty = {
+  id: string;
+  name: string;
+  price: string;
+  location: string;
+  badge: string;
+  beds: number;
+  baths: number;
+  sqft: string;
+  insight: string;
+};
+
+type ListingsResponse = {
+  parsedParams?: Record<string, unknown>;
+  listings?: unknown;
+  error?: string;
+};
+
 const containerVariants = {
   hidden: {},
   visible: {
@@ -102,7 +120,7 @@ function PropertyCard({
   property,
   featured = false,
 }: {
-  property: (typeof properties)[0];
+  property: SearchProperty;
   featured?: boolean;
 }) {
   const isBadgeMatch = property.badge.includes("%");
@@ -181,6 +199,113 @@ function PropertyCard({
 
 export default function BrowsePage() {
   const [query, setQuery] = useState("");
+  const [properties, setProperties] = useState<SearchProperty[]>(fallbackProperties);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [parsedParams, setParsedParams] = useState<Record<string, unknown> | null>(null);
+
+  const hasLiveResults = useMemo(
+    () => properties !== fallbackProperties,
+    [properties],
+  );
+
+  function firstNonEmptyString(...values: unknown[]): string | undefined {
+    for (const value of values) {
+      if (typeof value === "string" && value.trim().length > 0) {
+        return value.trim();
+      }
+    }
+    return undefined;
+  }
+
+  function toNumber(value: unknown): number | undefined {
+    if (typeof value === "number" && Number.isFinite(value)) return value;
+    if (typeof value === "string") {
+      const n = Number(value.replace(/[^\d.]/g, ""));
+      if (Number.isFinite(n)) return n;
+    }
+    return undefined;
+  }
+
+  function toPrice(value: unknown): string {
+    const n = toNumber(value);
+    if (!n) return "Price unavailable";
+    return n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+  }
+
+  function parseListingItems(payload: unknown): SearchProperty[] {
+    const rawItems =
+      Array.isArray(payload)
+        ? payload
+        : payload && typeof payload === "object" && Array.isArray((payload as { data?: unknown }).data)
+          ? (payload as { data: unknown[] }).data
+          : [];
+
+    const mapped: SearchProperty[] = [];
+    for (const item of rawItems) {
+      if (!item || typeof item !== "object") continue;
+      const record = item as Record<string, unknown>;
+
+      const id = firstNonEmptyString(record.id, record.zpid, record.providerListingId);
+      const address = firstNonEmptyString(record.address, record.streetAddress, record.addressStreet);
+      if (!id || !address) continue;
+
+      const city = firstNonEmptyString(record.addressCity);
+      const state = firstNonEmptyString(record.addressState);
+
+      mapped.push({
+        id,
+        name: firstNonEmptyString(record.statusText, record.homeType, address) ?? address,
+        price: toPrice(record.unformattedPrice ?? record.price),
+        location: [city, state].filter(Boolean).join(", ") || address,
+        badge: firstNonEmptyString(record.statusType, record.homeStatus, "Live Listing") ?? "Live Listing",
+        beds: toNumber(record.beds) ?? 0,
+        baths: toNumber(record.baths) ?? 0,
+        sqft: String(toNumber(record.area) ?? "N/A"),
+        insight: "Fetched from HasData Zillow listing search based on your natural-language request.",
+      });
+    }
+
+    return mapped.slice(0, 5);
+  }
+
+  async function onSearch() {
+    const trimmed = query.trim();
+    if (!trimmed) return;
+
+    setIsLoading(true);
+    setErrorMessage(null);
+
+    try {
+      const response = await fetch("/api/listings/search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ query: trimmed }),
+      });
+
+      const data = (await response.json()) as ListingsResponse;
+      if (!response.ok) {
+        throw new Error(data.error ?? "Search failed.");
+      }
+
+      const parsed = parseListingItems(data.listings);
+      if (parsed.length === 0) {
+        throw new Error("No listings were returned for that search. Try broadening the location or filters.");
+      }
+
+      setParsedParams(data.parsedParams ?? null);
+      setProperties(parsed);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Search failed.";
+      setErrorMessage(message);
+      setProperties(fallbackProperties);
+      setParsedParams(null);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   return (
     <div className="px-6 pb-20">
@@ -210,9 +335,13 @@ export default function BrowsePage() {
             placeholder="Describe your ideal home..."
             className="flex-1 bg-transparent py-4 px-2 text-on-surface placeholder:text-on-surface-variant/60 outline-none text-base"
           />
-          <button className="bg-primary text-on-primary rounded-2xl px-6 py-3.5 font-bold text-sm flex items-center gap-2 transition-transform active:scale-95 shrink-0">
+          <button
+            onClick={onSearch}
+            disabled={isLoading}
+            className="bg-primary text-on-primary rounded-2xl px-6 py-3.5 font-bold text-sm flex items-center gap-2 transition-transform active:scale-95 shrink-0 disabled:opacity-60"
+          >
             <Search size={18} />
-            Search
+            {isLoading ? "Searching..." : "Search"}
           </button>
         </div>
 
@@ -227,6 +356,16 @@ export default function BrowsePage() {
             </button>
           ))}
         </div>
+
+        {errorMessage && (
+          <p className="mt-5 text-sm text-red-600">{errorMessage}</p>
+        )}
+
+        {parsedParams && (
+          <p className="mt-5 text-sm text-on-surface-variant">
+            Parsed search: {JSON.stringify(parsedParams)}
+          </p>
+        )}
       </motion.section>
 
       {/* Top 5 Recommendations */}
@@ -242,7 +381,7 @@ export default function BrowsePage() {
             Curated Discovery
           </span>
           <h2 className="font-[family-name:var(--font-headline)] text-3xl font-extrabold text-on-surface mt-1">
-            Top 5 for You
+            {hasLiveResults ? "Top Live Results" : "Top 5 for You"}
           </h2>
         </motion.div>
 
