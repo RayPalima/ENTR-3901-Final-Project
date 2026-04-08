@@ -17,25 +17,27 @@ export type ZillowListingParams = {
   page?: number;
 };
 
-type OpenRouterMessage = {
-  role: "system" | "user";
-  content: string;
+type GeminiPart = { text?: string };
+
+type GeminiContent = {
+  role?: string;
+  parts?: GeminiPart[];
 };
 
-type OpenRouterChoice = {
-  message?: {
-    content?: string;
-  };
+type GeminiCandidate = {
+  content?: GeminiContent;
+  finishReason?: string;
 };
 
-type OpenRouterResponse = {
-  choices?: OpenRouterChoice[];
+type GeminiResponse = {
+  candidates?: GeminiCandidate[];
 };
 
-type OpenRouterErrorPayload = {
+type GeminiErrorPayload = {
   error?: {
     message?: string;
     code?: number;
+    status?: string;
   };
 };
 
@@ -71,6 +73,8 @@ const ALLOWED_SORTS = new Set([
   "paymenta",
   "paymentd",
 ]);
+
+const DEFAULT_GEMINI_MODELS = ["gemini-2.5-flash", "gemini-2.5-pro"];
 
 function asPositiveNumber(value: unknown): number | undefined {
   if (typeof value === "number" && Number.isFinite(value) && value > 0) return Math.floor(value);
@@ -151,8 +155,8 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function getOpenRouterModels(): string[] {
-  const fromEnv = process.env.OPENROUTER_PARSER_MODELS
+function getGeminiParserModels(): string[] {
+  const fromEnv = process.env.GEMINI_PARSER_MODELS
     ?.split(",")
     .map((m) => m.trim())
     .filter(Boolean);
@@ -161,67 +165,92 @@ function getOpenRouterModels(): string[] {
     return fromEnv;
   }
 
-  return [
-    "qwen/qwen3-next-80b-a3b-instruct:free",
-    "qwen/qwen3-coder:free",
-    "meta-llama/llama-3.1-8b-instruct:free",
-  ];
+  return [...DEFAULT_GEMINI_MODELS];
 }
 
-async function callOpenRouterOnce(
+function geminiTextFromResponse(data: GeminiResponse): string {
+  const parts = data.candidates?.[0]?.content?.parts;
+  if (!parts?.length) {
+    const reason = data.candidates?.[0]?.finishReason;
+    throw new Error(
+      reason
+        ? `Gemini returned no text (finishReason: ${reason}).`
+        : "Gemini returned no candidates or text.",
+    );
+  }
+  return parts.map((p) => p.text ?? "").join("");
+}
+
+async function callGeminiOnce(
   model: string,
   apiKey: string,
-  messages: OpenRouterMessage[],
-): Promise<OpenRouterResponse> {
-  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+  systemInstruction: string,
+  userText: string,
+): Promise<GeminiResponse> {
+  const url = new URL(
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+  );
+  url.searchParams.set("key", apiKey);
+
+  const response = await fetch(url.toString(), {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      model,
-      temperature: 0.1,
-      messages,
+      systemInstruction: {
+        parts: [{ text: systemInstruction }],
+      },
+      contents: [
+        {
+          role: "user",
+          parts: [{ text: userText }],
+        },
+      ],
+      generationConfig: {
+        temperature: 0.1,
+        responseMimeType: "application/json",
+      },
     }),
   });
 
   if (response.ok) {
-    return (await response.json()) as OpenRouterResponse;
+    return (await response.json()) as GeminiResponse;
   }
 
   const bodyText = await response.text();
-  let payload: OpenRouterErrorPayload | undefined;
+  let payload: GeminiErrorPayload | undefined;
   try {
-    payload = JSON.parse(bodyText) as OpenRouterErrorPayload;
+    payload = JSON.parse(bodyText) as GeminiErrorPayload;
   } catch {
     payload = undefined;
   }
 
   const message = payload?.error?.message ?? bodyText;
-  const error = new Error(`OpenRouter request failed (${response.status}): ${message}`);
+  const code = payload?.error?.code ?? response.status;
+  const error = new Error(`Gemini request failed (${code}): ${message}`);
   (error as Error & { status?: number }).status = response.status;
   throw error;
 }
 
-async function callOpenRouterWithFallback(
+async function callGeminiWithFallback(
   apiKey: string,
-  messages: OpenRouterMessage[],
-): Promise<OpenRouterResponse> {
-  const models = getOpenRouterModels();
+  systemInstruction: string,
+  userText: string,
+): Promise<GeminiResponse> {
+  const models = getGeminiParserModels();
   const errors: string[] = [];
 
   for (const model of models) {
     for (let attempt = 1; attempt <= 2; attempt += 1) {
       try {
-        return await callOpenRouterOnce(model, apiKey, messages);
+        return await callGeminiOnce(model, apiKey, systemInstruction, userText);
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         const status = (error as Error & { status?: number }).status;
         const isRateLimit = status === 429;
+        const isRetryable = status === 429 || status === 503;
         errors.push(`${model} attempt ${attempt}: ${message}`);
 
-        if (isRateLimit && attempt === 1) {
+        if (isRetryable && attempt === 1) {
           await sleep(700);
           continue;
         }
@@ -234,11 +263,19 @@ async function callOpenRouterWithFallback(
   }
 
   throw new Error(
-    "All configured OpenRouter parser models are currently unavailable or rate-limited. " +
-      "Set OPENROUTER_PARSER_MODELS to additional models or retry shortly. " +
-      `Details: ${errors.slice(0, 3).join(" | ")}`,
+    "All configured Gemini parser models failed or were rate-limited. " +
+      "Set GEMINI_PARSER_MODELS to alternate model IDs or retry shortly. " +
+      `Details: ${errors.slice(0, 4).join(" | ")}`,
   );
 }
+
+const PARSER_SYSTEM_PROMPT =
+  "You convert real-estate search text into HasData Zillow Listing API params. " +
+  "Return only a JSON object with allowed keys: " +
+  'keyword, type, sort, "price[min]", "price[max]", "beds[min]", "beds[max]", "baths[min]", "baths[max]", "yearBuilt[min]", "yearBuilt[max]", "squareFeet[min]", "squareFeet[max]", page. ' +
+  'type must be one of: forSale, forRent, sold. If uncertain, set type to "forSale". ' +
+  "keyword must be a concise location phrase (city/state/zip/neighborhood). " +
+  "Never include explanations, markdown, or extra keys.";
 
 export async function parseNaturalLanguageToZillowParams(userQuery: string): Promise<ZillowListingParams> {
   return parseNaturalLanguageToZillowParamsWithFallback(userQuery);
@@ -248,9 +285,9 @@ export async function parseNaturalLanguageToZillowParamsWithFallback(
   userQuery: string,
   options?: { fallbackKeyword?: string },
 ): Promise<ZillowListingParams> {
-  const apiKey = process.env.OPENROUTER_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    throw new Error("Missing OPENROUTER_API_KEY.");
+    throw new Error("Missing GEMINI_API_KEY.");
   }
 
   const trimmed = userQuery.trim();
@@ -258,27 +295,10 @@ export async function parseNaturalLanguageToZillowParamsWithFallback(
     throw new Error("Search query is required.");
   }
 
-  const messages: OpenRouterMessage[] = [
-    {
-      role: "system",
-      content:
-        "You convert real-estate search text into HasData Zillow Listing API params. " +
-        "Return only JSON object with allowed keys: " +
-        'keyword, type, sort, "price[min]", "price[max]", "beds[min]", "beds[max]", "baths[min]", "baths[max]", "yearBuilt[min]", "yearBuilt[max]", "squareFeet[min]", "squareFeet[max]", page. ' +
-        'type must be one of: forSale, forRent, sold. If uncertain, set type to "forSale". ' +
-        "keyword must be a concise location phrase (city/state/zip/neighborhood). " +
-        "Never include explanations, markdown, or extra keys.",
-    },
-    {
-      role: "user",
-      content: trimmed,
-    },
-  ];
-
-  const data = await callOpenRouterWithFallback(apiKey, messages);
-  const content = data.choices?.[0]?.message?.content ?? "";
-  if (!content) {
-    throw new Error("OpenRouter returned an empty response.");
+  const data = await callGeminiWithFallback(apiKey, PARSER_SYSTEM_PROMPT, trimmed);
+  const content = geminiTextFromResponse(data);
+  if (!content.trim()) {
+    throw new Error("Gemini returned an empty response.");
   }
 
   const jsonText = extractJsonObject(content);
