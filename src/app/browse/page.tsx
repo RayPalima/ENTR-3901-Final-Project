@@ -22,12 +22,12 @@ const suggestions = [
   "Sunny terrace garden",
 ];
 
-const fallbackProperties = [
+const fallbackProperties: SearchProperty[] = [
   {
+    id: "fallback-1",
     name: "The Obsidian Glasshouse",
     price: "$1,450,000",
     location: "Laurel Canyon, LA",
-    match: "98%",
     badge: "98% Match",
     beds: 4,
     baths: 3,
@@ -36,10 +36,10 @@ const fallbackProperties = [
       "\"This home's floor-to-ceiling glazing and canyon views align perfectly with your preference for natural light and indoor-outdoor flow.\"",
   },
   {
+    id: "fallback-2",
     name: "Elderberry Cottage",
     price: "$820,000",
     location: "Cotswolds, UK",
-    match: null,
     badge: "Highly Viewed",
     beds: 3,
     baths: 2,
@@ -48,40 +48,16 @@ const fallbackProperties = [
       "\"A storybook retreat with hand-laid stone walls and wildflower gardens — ideal for the quiet, rural life you described.\"",
   },
   {
+    id: "fallback-3",
     name: "Skyline Loft 4B",
     price: "$1,100,000",
     location: "Austin, TX",
-    match: null,
     badge: "Investment Pick",
     beds: 2,
     baths: 2,
     sqft: "1,650",
     insight:
       "\"Strong rental yield in a booming market. The open-plan kitchen suits your entertaining style.\"",
-  },
-  {
-    name: "Blue Pine Retreat",
-    price: "$950,000",
-    location: "Tahoe, CA",
-    match: null,
-    badge: "Quiet Oasis",
-    beds: 3,
-    baths: 2,
-    sqft: "2,100",
-    insight:
-      "\"Nestled among blue pines with lake access — a sanctuary for deep work and weekend escapes.\"",
-  },
-  {
-    name: "Saguaro Sands",
-    price: "$1,250,000",
-    location: "Sedona, AZ",
-    match: null,
-    badge: "Unique Find",
-    beds: 4,
-    baths: 3,
-    sqft: "2,800",
-    insight:
-      "\"Desert modernism with red-rock panoramas. The private courtyard matches your love of stargazing.\"",
   },
 ];
 
@@ -213,6 +189,9 @@ export default function BrowsePage() {
   const { user } = useAuth();
   const [didAutoRun, setDidAutoRun] = useState(false);
   const [preferredLocation, setPreferredLocation] = useState<string | null>(null);
+  const [featuredProperties, setFeaturedProperties] = useState<SearchProperty[]>(fallbackProperties);
+  const [featuredLoading, setFeaturedLoading] = useState(false);
+  const [didFetchFeatured, setDidFetchFeatured] = useState(false);
 
   const hasLiveResults = useMemo(
     () => properties !== fallbackProperties,
@@ -243,36 +222,69 @@ export default function BrowsePage() {
     return n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
   }
 
+  function coerceToString(...values: unknown[]): string | undefined {
+    for (const v of values) {
+      if (typeof v === "string" && v.trim().length > 0) return v.trim();
+      if (typeof v === "number" && Number.isFinite(v)) return String(v);
+    }
+    return undefined;
+  }
+
+  function extractListArray(payload: unknown): unknown[] {
+    if (Array.isArray(payload)) return payload;
+    if (!payload || typeof payload !== "object") return [];
+    const obj = payload as Record<string, unknown>;
+    if (Array.isArray(obj.properties)) return obj.properties;
+    if (Array.isArray(obj.data)) return obj.data;
+    if (Array.isArray(obj.results)) return obj.results;
+    if (Array.isArray(obj.listings)) return obj.listings;
+    return [];
+  }
+
   function parseListingItems(payload: unknown): SearchProperty[] {
-    const rawItems =
-      Array.isArray(payload)
-        ? payload
-        : payload && typeof payload === "object" && Array.isArray((payload as { data?: unknown }).data)
-          ? (payload as { data: unknown[] }).data
-          : [];
+    const rawItems = extractListArray(payload);
 
     const mapped: SearchProperty[] = [];
     for (const item of rawItems) {
       if (!item || typeof item !== "object") continue;
       const record = item as Record<string, unknown>;
 
-      const id = firstNonEmptyString(record.id, record.zpid, record.providerListingId);
-      const address = firstNonEmptyString(record.address, record.streetAddress, record.addressStreet);
-      if (!id || !address) continue;
+      const id = coerceToString(record.zpid, record.id, record.providerListingId);
 
-      const city = firstNonEmptyString(record.addressCity);
-      const state = firstNonEmptyString(record.addressState);
+      const addrObj = record.address && typeof record.address === "object"
+        ? (record.address as Record<string, unknown>)
+        : null;
+      const street = firstNonEmptyString(
+        record.addressRaw,
+        addrObj?.street,
+        record.streetAddress,
+        record.addressStreet,
+      );
+      if (!id || !street) continue;
+
+      const city = firstNonEmptyString(addrObj?.city, record.addressCity);
+      const state = firstNonEmptyString(addrObj?.state, record.addressState);
+
+      const statusLabel = firstNonEmptyString(record.status, record.statusText);
+      const badge = statusLabel
+        ? statusLabel.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+        : "Live Listing";
+
+      const homeType = firstNonEmptyString(record.homeType);
+      const formattedType = homeType
+        ? homeType.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+        : null;
 
       mapped.push({
         id,
-        name: firstNonEmptyString(record.statusText, record.homeType, address) ?? address,
-        price: toPrice(record.unformattedPrice ?? record.price),
-        location: [city, state].filter(Boolean).join(", ") || address,
-        badge: firstNonEmptyString(record.statusType, record.homeStatus, "Live Listing") ?? "Live Listing",
+        name: formattedType ? `${formattedType} — ${street}` : street,
+        price: toPrice(record.price ?? record.unformattedPrice),
+        location: [city, state].filter(Boolean).join(", ") || street,
+        badge,
         beds: toNumber(record.beds) ?? 0,
         baths: toNumber(record.baths) ?? 0,
         sqft: String(toNumber(record.area) ?? "N/A"),
-        insight: "Fetched from HasData Zillow listing search based on your natural-language request.",
+        insight: "Fetched from live Zillow listings in your preferred area.",
       });
     }
 
@@ -309,6 +321,11 @@ export default function BrowsePage() {
       const parsed = parseListingItems(data.listings);
       if (parsed.length > 0) {
         setProperties(parsed);
+      } else if (data.listings != null) {
+        setErrorMessage(
+          "No listings matched your search. Add a location to your search (city, state, or ZIP). Example: “2 bedroom house in Vancouver, BC”.",
+        );
+        setProperties(fallbackProperties);
       } else {
         setProperties(fallbackProperties);
       }
@@ -349,6 +366,71 @@ export default function BrowsePage() {
 
     void fetchPreferredLocation();
   }, [user]);
+
+  useEffect(() => {
+    if (didFetchFeatured || !preferredLocation || !user) return;
+    setDidFetchFeatured(true);
+
+    const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+
+    const loadFeatured = async () => {
+      setFeaturedLoading(true);
+      try {
+        const { data: row } = await supabase
+          .from("featured_listings")
+          .select("location, fetched_at, items")
+          .eq("user_id", user.id)
+          .maybeSingle();
+
+        if (row) {
+          const age = Date.now() - new Date(row.fetched_at as string).getTime();
+          const items = (row.items ?? []) as SearchProperty[];
+          if (
+            age < ONE_DAY_MS &&
+            row.location === preferredLocation &&
+            items.length > 0
+          ) {
+            setFeaturedProperties(items);
+            return;
+          }
+        }
+
+        const res = await fetch("/api/listings/featured", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ keyword: preferredLocation }),
+        });
+        if (!res.ok) return;
+
+        const data = (await res.json()) as { listings?: unknown; note?: string };
+        if (data.listings == null) return;
+
+        const parsed = parseListingItems(data.listings);
+        const top3 = parsed.slice(0, 3);
+        if (top3.length > 0) {
+          setFeaturedProperties(top3);
+
+          await supabase
+            .from("featured_listings")
+            .upsert(
+              {
+                user_id: user.id,
+                location: preferredLocation,
+                fetched_at: new Date().toISOString(),
+                items: top3,
+              },
+              { onConflict: "user_id" },
+            );
+        }
+      } catch (err) {
+        console.warn("[featured] error:", err);
+      } finally {
+        setFeaturedLoading(false);
+      }
+    };
+
+    void loadFeatured();
+  }, [preferredLocation, didFetchFeatured, user]);
 
   useEffect(() => {
     if (didAutoRun) return;
@@ -433,7 +515,7 @@ export default function BrowsePage() {
         )}
       </motion.section>
 
-      {/* Top 5 Recommendations */}
+      {/* Top Recommendations */}
       <section className="max-w-6xl mx-auto mb-20">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -443,28 +525,58 @@ export default function BrowsePage() {
           className="mb-8"
         >
           <span className="text-[11px] uppercase tracking-widest font-bold text-tertiary-fixed-dim">
-            Curated Discovery
+            {hasLiveResults ? "Search Results" : "Curated Discovery"}
           </span>
           <h2 className="font-[family-name:var(--font-headline)] text-3xl font-extrabold text-on-surface mt-1">
-            {hasLiveResults ? "Top Live Results" : "Top 5 for You"}
+            {hasLiveResults
+              ? "Top Live Results"
+              : preferredLocation
+                ? `Top Picks in ${preferredLocation}`
+                : "Top Picks for You"}
           </h2>
+          {!hasLiveResults && preferredLocation && !featuredLoading && featuredProperties !== fallbackProperties && (
+            <p className="text-sm text-on-surface-variant mt-1">
+              Refreshed daily from live Zillow listings in your preferred area.
+            </p>
+          )}
         </motion.div>
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-80px" }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          {properties.map((property, i) => (
-            <PropertyCard
-              key={property.name}
-              property={property}
-              featured={i === 0}
-            />
-          ))}
-        </motion.div>
+        {(() => {
+          if (featuredLoading && !hasLiveResults) {
+            return (
+              <div className="flex items-center justify-center gap-3 py-16 text-on-surface-variant">
+                <span className="animate-spin h-5 w-5 border-2 border-primary border-t-transparent rounded-full" />
+                <span className="text-sm font-medium">Loading listings from {preferredLocation}…</span>
+              </div>
+            );
+          }
+
+          const displayItems = hasLiveResults
+            ? properties
+            : featuredProperties.length > 0
+              ? featuredProperties
+              : fallbackProperties;
+
+          const listKey = displayItems.map((p) => p.id).join(",");
+
+          return (
+            <motion.div
+              key={listKey}
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
+              {displayItems.map((property, i) => (
+                <PropertyCard
+                  key={property.id}
+                  property={property}
+                  featured={i === 0}
+                />
+              ))}
+            </motion.div>
+          );
+        })()}
       </section>
 
       {/* CTA Banner */}

@@ -14,10 +14,9 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
   const isPublic = PUBLIC_ROUTES.includes(pathname);
 
   if (isPublic) {
-    const showGuestTopBar =
-      (pathname === "/browse" || pathname === "/") && !loading && !user;
+    const showTopBar = pathname === "/browse" || pathname === "/";
 
-    if (!showGuestTopBar) return <>{children}</>;
+    if (!showTopBar) return <>{children}</>;
 
     return (
       <>
