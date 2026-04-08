@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Sparkles,
@@ -20,6 +20,29 @@ const suggestions = [
   "Quiet cottage near water",
   "Modern loft for a chef",
   "Sunny terrace garden",
+];
+
+const PREFERRED_LOCATIONS = [
+  "Toronto, ON",
+  "Montréal, QC",
+  "Vancouver, BC",
+  "Calgary, AB",
+  "Edmonton, AB",
+  "Ottawa, ON",
+  "Winnipeg, MB",
+  "Québec City, QC",
+  "Hamilton, ON",
+  "Kitchener–Waterloo, ON",
+  "New York, NY",
+  "Los Angeles, CA",
+  "Chicago, IL",
+  "Houston, TX",
+  "Phoenix, AZ",
+  "Philadelphia, PA",
+  "San Antonio, TX",
+  "San Diego, CA",
+  "Dallas, TX",
+  "San Jose, CA",
 ];
 
 const fallbackProperties: SearchProperty[] = [
@@ -59,6 +82,30 @@ const fallbackProperties: SearchProperty[] = [
     insight:
       "\"Strong rental yield in a booming market. The open-plan kitchen suits your entertaining style.\"",
   },
+  {
+    id: "fallback-4",
+    name: "Harborview Townhome",
+    price: "$975,000",
+    location: "San Diego, CA",
+    badge: "Waterfront",
+    beds: 3,
+    baths: 2,
+    sqft: "2,100",
+    insight:
+      "\"Steps from the marina with rooftop ocean views — a coastal lifestyle at a competitive price point.\"",
+  },
+  {
+    id: "fallback-5",
+    name: "Maple Ridge Colonial",
+    price: "$680,000",
+    location: "Toronto, ON",
+    badge: "Family Friendly",
+    beds: 4,
+    baths: 3,
+    sqft: "2,400",
+    insight:
+      "\"A classic family home in a top-rated school district with a spacious backyard and finished basement.\"",
+  },
 ];
 
 type SearchProperty = {
@@ -71,6 +118,7 @@ type SearchProperty = {
   baths: number;
   sqft: string;
   insight: string;
+  image?: string;
 };
 
 type ListingsResponse = {
@@ -113,15 +161,23 @@ function PropertyCard({
       }`}
     >
       <div
-        className={`relative bg-surface-container-highest ${
+        className={`relative bg-surface-container-highest overflow-hidden ${
           featured ? "min-h-[280px]" : "h-52"
         }`}
       >
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center">
-            <MapPin className="text-primary-container" size={28} />
+        {property.image ? (
+          <img
+            src={property.image}
+            alt={property.name}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center">
+              <MapPin className="text-primary-container" size={28} />
+            </div>
           </div>
-        </div>
+        )}
         <span
           className={`absolute top-4 left-4 text-xs font-bold px-3 py-1.5 rounded-full ${
             isBadgeMatch
@@ -193,6 +249,31 @@ export default function BrowsePage() {
   const [featuredLoading, setFeaturedLoading] = useState(false);
   const [didFetchFeatured, setDidFetchFeatured] = useState(false);
 
+  const [guestLocation, setGuestLocation] = useState("");
+  const [showGuestLocationDropdown, setShowGuestLocationDropdown] = useState(false);
+  const guestLocationRef = useRef<HTMLDivElement | null>(null);
+
+  const matchingGuestLocations = guestLocation
+    ? PREFERRED_LOCATIONS.filter((loc) =>
+        loc.toLowerCase().includes(guestLocation.toLowerCase()),
+      )
+    : PREFERRED_LOCATIONS;
+
+  useEffect(() => {
+    if (!showGuestLocationDropdown) return;
+    const onMouseDown = (e: MouseEvent) => {
+      if (
+        guestLocationRef.current &&
+        e.target instanceof Node &&
+        !guestLocationRef.current.contains(e.target)
+      ) {
+        setShowGuestLocationDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", onMouseDown);
+    return () => document.removeEventListener("mousedown", onMouseDown);
+  }, [showGuestLocationDropdown]);
+
   const hasLiveResults = useMemo(
     () => properties !== fallbackProperties,
     [properties],
@@ -216,10 +297,14 @@ export default function BrowsePage() {
     return undefined;
   }
 
-  function toPrice(value: unknown): string {
+  function toPrice(value: unknown, currencyHint?: unknown): string {
     const n = toNumber(value);
     if (!n) return "Price unavailable";
-    return n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+    const raw = typeof currencyHint === "string" ? currencyHint.trim().toUpperCase() : "";
+    const isCAD = raw === "C$" || raw === "CAD";
+    const code = isCAD ? "CAD" : "USD";
+    const locale = isCAD ? "en-CA" : "en-US";
+    return n.toLocaleString(locale, { style: "currency", currency: code, maximumFractionDigits: 0 });
   }
 
   function coerceToString(...values: unknown[]): string | undefined {
@@ -275,16 +360,25 @@ export default function BrowsePage() {
         ? homeType.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
         : null;
 
+      const photos = Array.isArray(record.photos) ? record.photos : [];
+      const imageUrl = firstNonEmptyString(
+        record.image,
+        photos[0],
+        record.imgSrc,
+        record.thumbnailUrl,
+      );
+
       mapped.push({
         id,
         name: formattedType ? `${formattedType} — ${street}` : street,
-        price: toPrice(record.price ?? record.unformattedPrice),
+        price: toPrice(record.price ?? record.unformattedPrice, record.currency),
         location: [city, state].filter(Boolean).join(", ") || street,
         badge,
         beds: toNumber(record.beds) ?? 0,
         baths: toNumber(record.baths) ?? 0,
         sqft: String(toNumber(record.area) ?? "N/A"),
         insight: "Fetched from live Zillow listings in your preferred area.",
+        image: imageUrl,
       });
     }
 
@@ -295,12 +389,17 @@ export default function BrowsePage() {
     const trimmed = query.trim();
     if (!trimmed) return;
 
+    if (!user && !PREFERRED_LOCATIONS.includes(guestLocation)) {
+      setErrorMessage("Please select a location from the dropdown before searching.");
+      return;
+    }
+
     setIsLoading(true);
     setErrorMessage(null);
     setNoteMessage(null);
 
     try {
-      const fallbackKeyword = preferredLocation;
+      const fallbackKeyword = user ? preferredLocation : guestLocation;
 
       const response = await fetch("/api/listings/search", {
         method: "POST",
@@ -367,11 +466,12 @@ export default function BrowsePage() {
     void fetchPreferredLocation();
   }, [user]);
 
+  const GUEST_LOCATION = "New York, NY";
+  const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+
   useEffect(() => {
     if (didFetchFeatured || !preferredLocation || !user) return;
     setDidFetchFeatured(true);
-
-    const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
     const loadFeatured = async () => {
       setFeaturedLoading(true);
@@ -406,9 +506,9 @@ export default function BrowsePage() {
         if (data.listings == null) return;
 
         const parsed = parseListingItems(data.listings);
-        const top3 = parsed.slice(0, 3);
-        if (top3.length > 0) {
-          setFeaturedProperties(top3);
+        const top5 = parsed.slice(0, 5);
+        if (top5.length > 0) {
+          setFeaturedProperties(top5);
 
           await supabase
             .from("featured_listings")
@@ -417,7 +517,7 @@ export default function BrowsePage() {
                 user_id: user.id,
                 location: preferredLocation,
                 fetched_at: new Date().toISOString(),
-                items: top3,
+                items: top5,
               },
               { onConflict: "user_id" },
             );
@@ -431,6 +531,67 @@ export default function BrowsePage() {
 
     void loadFeatured();
   }, [preferredLocation, didFetchFeatured, user]);
+
+  useEffect(() => {
+    if (didFetchFeatured || user !== null) return;
+    setDidFetchFeatured(true);
+
+    const CACHE_KEY = "guest_featured_listings";
+
+    interface GuestCache {
+      timestamp: number;
+      items: SearchProperty[];
+    }
+
+    try {
+      const raw = localStorage.getItem(CACHE_KEY);
+      if (raw) {
+        const cached = JSON.parse(raw) as GuestCache;
+        const age = Date.now() - cached.timestamp;
+        if (age < ONE_DAY_MS && cached.items.length > 0) {
+          setFeaturedProperties(cached.items);
+          return;
+        }
+      }
+    } catch {
+      // corrupt cache — continue to fetch
+    }
+
+    const loadGuestFeatured = async () => {
+      setFeaturedLoading(true);
+      try {
+        const res = await fetch("/api/listings/featured", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ keyword: GUEST_LOCATION }),
+        });
+        if (!res.ok) return;
+
+        const data = (await res.json()) as { listings?: unknown; note?: string };
+        if (data.listings == null) return;
+
+        const parsed = parseListingItems(data.listings);
+        const top5 = parsed.slice(0, 5);
+        if (top5.length > 0) {
+          setFeaturedProperties(top5);
+          try {
+            localStorage.setItem(
+              CACHE_KEY,
+              JSON.stringify({ timestamp: Date.now(), items: top5 }),
+            );
+          } catch {
+            // localStorage full — non-critical
+          }
+        }
+      } catch (err) {
+        console.warn("[guest featured] error:", err);
+      } finally {
+        setFeaturedLoading(false);
+      }
+    };
+
+    void loadGuestFeatured();
+  }, [didFetchFeatured, user]);
 
   useEffect(() => {
     if (didAutoRun) return;
@@ -480,6 +641,44 @@ export default function BrowsePage() {
             {isLoading ? "Searching..." : "Search"}
           </button>
         </div>
+
+        {!user && (
+          <div className="relative max-w-2xl mx-auto mt-4" ref={guestLocationRef}>
+            <div className="bg-surface-container-highest rounded-2xl p-2 flex items-center gap-2 editorial-shadow">
+              <div className="pl-3 text-primary-container">
+                <MapPin size={18} />
+              </div>
+              <input
+                type="text"
+                value={guestLocation}
+                onFocus={() => setShowGuestLocationDropdown(true)}
+                onChange={(e) => {
+                  setGuestLocation(e.target.value);
+                  setShowGuestLocationDropdown(true);
+                }}
+                placeholder="Select a location..."
+                className="flex-1 bg-transparent py-3 px-2 text-on-surface placeholder:text-on-surface-variant/60 outline-none text-sm"
+              />
+            </div>
+            {showGuestLocationDropdown && matchingGuestLocations.length > 0 && (
+              <div className="absolute z-20 mt-2 w-full max-h-44 overflow-y-auto rounded-2xl bg-surface-container-highest border border-outline-variant/40 shadow-lg text-left">
+                {matchingGuestLocations.map((loc) => (
+                  <button
+                    key={loc}
+                    type="button"
+                    onClick={() => {
+                      setGuestLocation(loc);
+                      setShowGuestLocationDropdown(false);
+                    }}
+                    className="w-full px-4 py-2 text-sm text-on-surface hover:bg-surface-container-high transition-colors text-left"
+                  >
+                    {loc}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="flex flex-wrap justify-center gap-3 mt-6">
           {suggestions.map((s) => (
@@ -531,12 +730,12 @@ export default function BrowsePage() {
             {hasLiveResults
               ? "Top Live Results"
               : preferredLocation
-                ? `Top Picks in ${preferredLocation}`
-                : "Top Picks for You"}
+                ? `Top 5 Picks in ${preferredLocation}`
+                : "Top 5 Picks in New York City"}
           </h2>
-          {!hasLiveResults && preferredLocation && !featuredLoading && featuredProperties !== fallbackProperties && (
+          {!hasLiveResults && !featuredLoading && featuredProperties !== fallbackProperties && (
             <p className="text-sm text-on-surface-variant mt-1">
-              Refreshed daily from live Zillow listings in your preferred area.
+              Refreshed daily from live Zillow listings.
             </p>
           )}
         </motion.div>
@@ -546,7 +745,7 @@ export default function BrowsePage() {
             return (
               <div className="flex items-center justify-center gap-3 py-16 text-on-surface-variant">
                 <span className="animate-spin h-5 w-5 border-2 border-primary border-t-transparent rounded-full" />
-                <span className="text-sm font-medium">Loading listings from {preferredLocation}…</span>
+                <span className="text-sm font-medium">Loading listings from {preferredLocation ?? "New York City"}…</span>
               </div>
             );
           }
