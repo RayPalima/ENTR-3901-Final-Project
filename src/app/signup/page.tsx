@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -16,15 +16,66 @@ import {
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
+const PREFERRED_LOCATIONS = [
+  // Canada
+  "Toronto, ON, Canada",
+  "Montréal, QC, Canada",
+  "Vancouver, BC, Canada",
+  "Calgary, AB, Canada",
+  "Edmonton, AB, Canada",
+  "Ottawa, ON, Canada",
+  "Winnipeg, MB, Canada",
+  "Québec City, QC, Canada",
+  "Hamilton, ON, Canada",
+  "Kitchener–Waterloo, ON, Canada",
+  // United States
+  "New York, NY, USA",
+  "Los Angeles, CA, USA",
+  "Chicago, IL, USA",
+  "Houston, TX, USA",
+  "Phoenix, AZ, USA",
+  "Philadelphia, PA, USA",
+  "San Antonio, TX, USA",
+  "San Diego, CA, USA",
+  "Dallas, TX, USA",
+  "San Jose, CA, USA",
+];
+
 export default function SignUpPage() {
   const router = useRouter();
   const [fullName, setFullName] = useState("");
+  const [preferredLocation, setPreferredLocation] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [showLocationDropdown, setShowLocationDropdown] = useState(false);
+  const locationDropdownRef = useRef<HTMLDivElement | null>(null);
+
+  const matchingLocations = preferredLocation
+    ? PREFERRED_LOCATIONS.filter((loc) =>
+        loc.toLowerCase().includes(preferredLocation.toLowerCase()),
+      )
+    : PREFERRED_LOCATIONS;
+
+  useEffect(() => {
+    if (!showLocationDropdown) return;
+
+    const onMouseDown = (e: MouseEvent) => {
+      const target = e.target;
+      if (!target) return;
+      if (!locationDropdownRef.current) return;
+      if (!(target instanceof Node)) return;
+      if (!locationDropdownRef.current.contains(target)) {
+        setShowLocationDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", onMouseDown);
+    return () => document.removeEventListener("mousedown", onMouseDown);
+  }, [showLocationDropdown]);
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,12 +88,21 @@ export default function SignUpPage() {
       return;
     }
 
+    if (!PREFERRED_LOCATIONS.includes(preferredLocation)) {
+      setError(
+        "Choose a home base from the suggestions list (top cities in Canada and the US).",
+      );
+      setLoading(false);
+      return;
+    }
+
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: {
           full_name: fullName,
+          preferred_location: preferredLocation,
         },
       },
     });
@@ -186,6 +246,49 @@ export default function SignUpPage() {
                   required
                   className="w-full bg-surface-container-highest border-none rounded-2xl py-4 pl-12 pr-4 text-on-surface placeholder:text-on-surface-variant/40 focus:ring-2 focus:ring-primary/30 transition-all font-medium"
                 />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2 font-[family-name:var(--font-headline)]">
+                Preferred home base (city, state or region)
+              </label>
+              <div className="relative" ref={locationDropdownRef}>
+                <div className="relative">
+                  <User
+                    size={18}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-outline"
+                  />
+                  <input
+                    type="text"
+                    value={preferredLocation}
+                    onFocus={() => setShowLocationDropdown(true)}
+                    onChange={(e) => {
+                      setPreferredLocation(e.target.value);
+                      setShowLocationDropdown(true);
+                    }}
+                    placeholder="Start typing, then choose a city..."
+                    required
+                    className="w-full bg-surface-container-highest border-none rounded-2xl py-4 pl-12 pr-4 text-on-surface placeholder:text-on-surface-variant/40 focus:ring-2 focus:ring-primary/30 transition-all font-medium"
+                  />
+                </div>
+                {showLocationDropdown && matchingLocations.length > 0 && (
+                  <div className="absolute z-20 mt-2 w-full max-h-44 overflow-y-auto rounded-2xl bg-surface-container-highest border border-outline-variant/40 shadow-lg text-left">
+                    {matchingLocations.map((loc) => (
+                      <button
+                        key={loc}
+                        type="button"
+                        onClick={() => {
+                          setPreferredLocation(loc);
+                          setShowLocationDropdown(false);
+                        }}
+                        className="w-full px-4 py-2 text-sm text-on-surface hover:bg-surface-container-high transition-colors text-left"
+                      >
+                        {loc}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 

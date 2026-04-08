@@ -131,6 +131,12 @@ function sanitizeParsedOutput(input: ParsedModelOutput): ZillowListingParams {
   return params;
 }
 
+function themedMissingLocationError(): Error {
+  return new Error(
+    "Add a location to your search (city, state, or ZIP). Example: “2 bedroom house in Vancouver, BC”.",
+  );
+}
+
 function stripUndefined<T extends Record<string, unknown>>(obj: T): T {
   const next = { ...obj };
   for (const key of Object.keys(next)) {
@@ -235,6 +241,13 @@ async function callOpenRouterWithFallback(
 }
 
 export async function parseNaturalLanguageToZillowParams(userQuery: string): Promise<ZillowListingParams> {
+  return parseNaturalLanguageToZillowParamsWithFallback(userQuery);
+}
+
+export async function parseNaturalLanguageToZillowParamsWithFallback(
+  userQuery: string,
+  options?: { fallbackKeyword?: string },
+): Promise<ZillowListingParams> {
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) {
     throw new Error("Missing OPENROUTER_API_KEY.");
@@ -270,6 +283,17 @@ export async function parseNaturalLanguageToZillowParams(userQuery: string): Pro
 
   const jsonText = extractJsonObject(content);
   const parsed = JSON.parse(jsonText) as ParsedModelOutput;
+
+  const fallbackKeyword = options?.fallbackKeyword?.trim();
+  const keyword = typeof parsed.keyword === "string" ? parsed.keyword.trim() : "";
+  if (!keyword) {
+    if (fallbackKeyword) {
+      parsed.keyword = fallbackKeyword;
+    } else {
+      throw themedMissingLocationError();
+    }
+  }
+
   return stripUndefined(sanitizeParsedOutput(parsed));
 }
 

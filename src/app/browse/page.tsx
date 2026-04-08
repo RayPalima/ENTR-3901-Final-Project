@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Sparkles,
@@ -12,6 +12,9 @@ import {
   ChevronRight,
   Search,
 } from "lucide-react";
+import { useAuth } from "@/context/auth-context";
+import { useSearchParams } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 
 const suggestions = [
   "Quiet cottage near water",
@@ -97,6 +100,7 @@ type SearchProperty = {
 type ListingsResponse = {
   parsedParams?: Record<string, unknown>;
   listings?: unknown;
+  note?: string;
   error?: string;
 };
 
@@ -198,11 +202,17 @@ function PropertyCard({
 }
 
 export default function BrowsePage() {
-  const [query, setQuery] = useState("");
+  const searchParams = useSearchParams();
+  const initialQuery = searchParams.get("q") ?? "";
+  const [query, setQuery] = useState(initialQuery);
   const [properties, setProperties] = useState<SearchProperty[]>(fallbackProperties);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [parsedParams, setParsedParams] = useState<Record<string, unknown> | null>(null);
+  const [noteMessage, setNoteMessage] = useState<string | null>(null);
+  const { user } = useAuth();
+  const [didAutoRun, setDidAutoRun] = useState(false);
+  const [preferredLocation, setPreferredLocation] = useState<string | null>(null);
 
   const hasLiveResults = useMemo(
     () => properties !== fallbackProperties,
@@ -275,14 +285,17 @@ export default function BrowsePage() {
 
     setIsLoading(true);
     setErrorMessage(null);
+    setNoteMessage(null);
 
     try {
+      const fallbackKeyword = preferredLocation;
+
       const response = await fetch("/api/listings/search", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ query: trimmed }),
+        body: JSON.stringify({ query: trimmed, fallbackKeyword }),
       });
 
       const data = (await response.json()) as ListingsResponse;
@@ -290,22 +303,60 @@ export default function BrowsePage() {
         throw new Error(data.error ?? "Search failed.");
       }
 
-      const parsed = parseListingItems(data.listings);
-      if (parsed.length === 0) {
-        throw new Error("No listings were returned for that search. Try broadening the location or filters.");
-      }
-
       setParsedParams(data.parsedParams ?? null);
-      setProperties(parsed);
+      setNoteMessage(data.note ?? null);
+
+      const parsed = parseListingItems(data.listings);
+      if (parsed.length > 0) {
+        setProperties(parsed);
+      } else {
+        setProperties(fallbackProperties);
+      }
     } catch (error) {
       const message = error instanceof Error ? error.message : "Search failed.";
       setErrorMessage(message);
       setProperties(fallbackProperties);
       setParsedParams(null);
+      setNoteMessage(null);
     } finally {
       setIsLoading(false);
     }
   }
+
+  useEffect(() => {
+    // If logged in, fetch profile.preferred_location once
+    const fetchPreferredLocation = async () => {
+      if (!user) {
+        setPreferredLocation(null);
+        return;
+      }
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("preferred_location")
+        .eq("id", user.id)
+        .maybeSingle();
+      if (error) {
+        // Silent failure; we still let the user search, they'll just see the "add a location" tip if missing
+        setPreferredLocation(null);
+        return;
+      }
+      setPreferredLocation(
+        data?.preferred_location && typeof data.preferred_location === "string"
+          ? data.preferred_location
+          : null,
+      );
+    };
+
+    void fetchPreferredLocation();
+  }, [user]);
+
+  useEffect(() => {
+    if (didAutoRun) return;
+    if (!initialQuery.trim()) return;
+    setDidAutoRun(true);
+    void onSearch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [didAutoRun, initialQuery]);
 
   return (
     <div className="px-6 pb-20">
@@ -332,6 +383,9 @@ export default function BrowsePage() {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") void onSearch();
+            }}
             placeholder="Describe your ideal home..."
             className="flex-1 bg-transparent py-4 px-2 text-on-surface placeholder:text-on-surface-variant/60 outline-none text-base"
           />
@@ -358,13 +412,24 @@ export default function BrowsePage() {
         </div>
 
         {errorMessage && (
-          <p className="mt-5 text-sm text-red-600">{errorMessage}</p>
+          <div className="mt-6 max-w-2xl mx-auto rounded-2xl bg-surface-container p-4 text-left editorial-shadow">
+            <p className="text-[11px] uppercase tracking-widest font-bold text-primary-container mb-1">
+              Search Tip
+            </p>
+            <p className="text-sm text-on-surface-variant leading-relaxed">
+              {errorMessage}
+            </p>
+          </div>
+        )}
+
+        {noteMessage && (
+          <p className="mt-5 text-sm text-on-surface-variant">{noteMessage}</p>
         )}
 
         {parsedParams && (
-          <p className="mt-5 text-sm text-on-surface-variant">
-            Parsed search: {JSON.stringify(parsedParams)}
-          </p>
+          <pre className="mt-5 text-left text-xs bg-surface-container rounded-2xl p-4 overflow-auto">
+            {JSON.stringify(parsedParams, null, 2)}
+          </pre>
         )}
       </motion.section>
 

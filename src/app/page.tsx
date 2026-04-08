@@ -12,11 +12,10 @@ import {
   Ruler,
   ChevronRight,
   Search,
-  LogIn,
-  UserPlus,
 } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 import { useRouter } from "next/navigation";
+import { PublicTopBar } from "@/components/public-top-bar";
 
 const suggestions = [
   "Quiet cottage near water",
@@ -181,50 +180,21 @@ function PropertyCard({
 
 export default function HomePage() {
   const [query, setQuery] = useState("");
-  const { user, loading } = useAuth();
+  useAuth();
   const router = useRouter();
+
+  const goToBrowse = () => {
+    const trimmed = query.trim();
+    if (trimmed) {
+      router.push(`/browse?q=${encodeURIComponent(trimmed)}`);
+    } else {
+      router.push("/browse");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-surface">
-      {/* Public Top Bar */}
-      <header className="fixed top-0 left-0 right-0 h-20 bg-surface/70 backdrop-blur-xl flex justify-between items-center px-6 md:px-12 z-50">
-        <div className="flex items-center gap-3">
-          <h1 className="text-xl font-extrabold text-primary tracking-tight font-[family-name:var(--font-headline)]">
-            Homestead
-          </h1>
-          <span className="hidden sm:inline text-[10px] uppercase tracking-widest text-primary-container font-bold opacity-70">
-            Digital Sanctuary
-          </span>
-        </div>
-        <div className="flex items-center gap-3">
-          {!loading && !user && (
-            <>
-              <Link
-                href="/signin"
-                className="text-primary font-bold text-sm flex items-center gap-2 hover:opacity-80 transition-opacity font-[family-name:var(--font-headline)]"
-              >
-                <LogIn size={16} />
-                Sign In
-              </Link>
-              <Link
-                href="/signup"
-                className="bg-primary text-on-primary px-5 py-2.5 rounded-full font-bold text-sm flex items-center gap-2 shadow-lg shadow-primary/20 hover:opacity-95 active:scale-95 transition-all font-[family-name:var(--font-headline)]"
-              >
-                <UserPlus size={16} />
-                Get Started
-              </Link>
-            </>
-          )}
-          {!loading && user && (
-            <button
-              onClick={() => router.push("/dashboard")}
-              className="bg-primary text-on-primary px-5 py-2.5 rounded-full font-bold text-sm flex items-center gap-2 shadow-lg shadow-primary/20 hover:opacity-95 active:scale-95 transition-all font-[family-name:var(--font-headline)]"
-            >
-              Go to Dashboard <ArrowRight size={16} />
-            </button>
-          )}
-        </div>
-      </header>
+      <PublicTopBar />
 
       <div className="pt-20 px-6 pb-20">
         {/* Hero Search */}
@@ -250,10 +220,16 @@ export default function HomePage() {
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") goToBrowse();
+              }}
               placeholder="Describe your ideal home..."
               className="flex-1 bg-transparent py-4 px-2 text-on-surface placeholder:text-on-surface-variant/60 outline-none text-base"
             />
-            <button className="bg-primary text-on-primary rounded-2xl px-6 py-3.5 font-bold text-sm flex items-center gap-2 transition-transform active:scale-95 shrink-0">
+            <button
+              onClick={goToBrowse}
+              className="bg-primary text-on-primary rounded-2xl px-6 py-3.5 font-bold text-sm flex items-center gap-2 transition-transform active:scale-95 shrink-0"
+            >
               <Search size={18} />
               Search
             </button>
